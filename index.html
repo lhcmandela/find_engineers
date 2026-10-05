@@ -1,0 +1,2126 @@
+<!DOCTYPE html>
+<html lang="en" data-accent="indigo">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Find Engineers">
+<meta name="description" content="Find a verified electrician or electrical engineer in Accra. Demo with sample data.">
+<title>Find Engineers</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+/* Apple system palette: grouped background, white cards, one tint.
+   The tint has four options (More > Colour) so the owner can pick one.
+   Dark mode follows the phone. */
+:root{
+  color-scheme:light;
+  --bg:#F2F2F7;--card:#FFFFFF;--card2:#F2F2F7;--sheet:#FFFFFF;--hl:#E5E5EA;
+  --label:#000000;--sec:rgba(60,60,67,.6);--ter:rgba(60,60,67,.3);--sep:rgba(60,60,67,.2);
+  --fill:rgba(120,120,128,.12);--seg-on:#FFFFFF;
+  --tint:#3F51D8;--tint-soft:rgba(63,81,216,.12);--tint-fill:#3F51D8;
+  --green:#34C759;--green-t:#248A3D;--orange:#FF9500;--orange-t:#C35A00;--red:#FF3B30;
+  --overlay:rgba(0,0,0,.28);
+  --glass-bg:rgba(255,255,255,.62);--glass-brd:rgba(255,255,255,.8);
+  --glass-shadow:0 8px 30px rgba(0,0,0,.10),inset 0 1px 1px rgba(255,255,255,.95),inset 0 -1px 1px rgba(0,0,0,.035);
+  --tabidle:#3C3C43;--hud:rgba(236,236,240,.96);--desk:#E5E5EA;
+}
+:root[data-accent="sea"]{--tint:#0A7CC1;--tint-soft:rgba(10,124,193,.12);--tint-fill:#0A7CC1}
+:root[data-accent="teal"]{--tint:#0B7F74;--tint-soft:rgba(11,127,116,.12);--tint-fill:#0B7F74}
+:root[data-accent="violet"]{--tint:#7442C8;--tint-soft:rgba(116,66,200,.12);--tint-fill:#7442C8}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#000000;--card:#1C1C1E;--card2:#2C2C2E;--sheet:#1C1C1E;--hl:#3A3A3C;
+    --label:#FFFFFF;--sec:rgba(235,235,245,.6);--ter:rgba(235,235,245,.3);--sep:rgba(84,84,88,.6);
+    --fill:rgba(120,120,128,.26);--seg-on:#636366;
+    --tint:#8391FF;--tint-soft:rgba(131,145,255,.2);--tint-fill:#5464E8;
+    --green:#30D158;--green-t:#30D158;--orange:#FF9F0A;--orange-t:#FF9F0A;--red:#FF453A;
+    --overlay:rgba(0,0,0,.5);
+    --glass-bg:rgba(46,46,50,.58);--glass-brd:rgba(255,255,255,.13);
+    --glass-shadow:0 8px 30px rgba(0,0,0,.55),inset 0 1px 1px rgba(255,255,255,.13);
+    --tabidle:#D1D1D6;--hud:#2C2C2E;--desk:#0B0B0C;
+  }
+  :root:not([data-theme="light"])[data-accent="sea"]{--tint:#40B4F2;--tint-soft:rgba(64,180,242,.18);--tint-fill:#0A84C8}
+  :root:not([data-theme="light"])[data-accent="teal"]{--tint:#3CCFBE;--tint-soft:rgba(60,207,190,.18);--tint-fill:#0E8C7E}
+  :root:not([data-theme="light"])[data-accent="violet"]{--tint:#B48CFF;--tint-soft:rgba(180,140,255,.2);--tint-fill:#8452D9}
+}
+/* an explicit dark choice wins too */
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#000000;--card:#1C1C1E;--card2:#2C2C2E;--sheet:#1C1C1E;--hl:#3A3A3C;
+  --label:#FFFFFF;--sec:rgba(235,235,245,.6);--ter:rgba(235,235,245,.3);--sep:rgba(84,84,88,.6);
+  --fill:rgba(120,120,128,.26);--seg-on:#636366;
+  --tint:#8391FF;--tint-soft:rgba(131,145,255,.2);--tint-fill:#5464E8;
+  --green:#30D158;--green-t:#30D158;--orange:#FF9F0A;--orange-t:#FF9F0A;--red:#FF453A;
+  --overlay:rgba(0,0,0,.5);
+  --glass-bg:rgba(46,46,50,.58);--glass-brd:rgba(255,255,255,.13);
+  --glass-shadow:0 8px 30px rgba(0,0,0,.55),inset 0 1px 1px rgba(255,255,255,.13);
+  --tabidle:#D1D1D6;--hud:#2C2C2E;--desk:#0B0B0C;
+}
+:root[data-theme="dark"][data-accent="sea"]{--tint:#40B4F2;--tint-soft:rgba(64,180,242,.18);--tint-fill:#0A84C8}
+:root[data-theme="dark"][data-accent="teal"]{--tint:#3CCFBE;--tint-soft:rgba(60,207,190,.18);--tint-fill:#0E8C7E}
+:root[data-theme="dark"][data-accent="violet"]{--tint:#B48CFF;--tint-soft:rgba(180,140,255,.2);--tint-fill:#8452D9}
+html,body{height:100%;margin:0}
+body{
+  background:var(--bg);color:var(--label);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-optical-sizing:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  letter-spacing:-.011em;overflow:hidden;
+}
+#root{position:fixed;inset:0;display:flex;justify-content:center;align-items:center;overflow:hidden;padding-top:env(safe-area-inset-top,0px)}
+.vs-shell{width:100%;max-width:430px;height:100%;margin:0 auto;background:var(--bg);display:flex;flex-direction:column;position:relative;overflow:hidden}
+.vs-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+@media (min-width:560px){
+  body{background:var(--desk)}
+  .vs-shell{height:calc(100% - 48px);max-height:900px;margin:auto;border-radius:44px;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 30px 80px -20px rgba(0,0,0,.28)}
+}
+input,button,select,textarea{font-family:inherit}
+button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+input{-webkit-appearance:none;appearance:none}
+::selection{background:var(--tint-soft)}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.vs-press:active{opacity:.6}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--tint);outline-offset:2px}
+
+/* ---- type ---- */
+.titlebar{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:18px 20px 14px}
+.eyebrow{font-size:13px;font-weight:600;color:var(--sec);text-transform:uppercase;letter-spacing:-.005em}
+.lt{font-size:34px;font-weight:700;letter-spacing:-.028em;line-height:41px}
+.lsub{font-size:15px;color:var(--sec);margin-top:1px;letter-spacing:-.012em}
+.px{padding-left:16px;padding-right:16px}
+.sh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:26px 4px 10px}
+.sh b{font-size:22px;font-weight:700;letter-spacing:-.026em}
+.caps{font-size:13px;color:var(--sec);text-transform:uppercase;padding:22px 4px 7px;letter-spacing:-.005em}
+.foot{font-size:13px;color:var(--sec);padding:8px 4px 0;line-height:1.4}
+.link{border:none;background:none;padding:0;color:var(--tint);font-size:17px;letter-spacing:-.02em;cursor:pointer}
+
+/* ---- surfaces + lists ---- */
+.card{background:var(--card);border-radius:22px}
+.group{background:var(--card);border-radius:22px;overflow:hidden}
+.li{position:relative;background:var(--card)}
+.li + .li::before{content:"";position:absolute;top:0;right:0;left:var(--inset,64px);height:.5px;background:var(--sep);z-index:3}
+.vrow{display:flex;align-items:center;gap:12px;padding:10px 16px;min-height:60px}
+.vrow.sm{min-height:48px;padding:8px 16px}
+.tap{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tap:active{background:var(--hl)}
+.tx{flex:1;min-width:0}
+.tt{font-size:17px;font-weight:600;letter-spacing:-.022em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.tt>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.st{font-size:15px;color:var(--sec);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-.012em}
+.am{font-size:17px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chev{color:var(--ter);display:flex;flex-shrink:0;margin-left:-2px}
+.vrow.wrap .tt,.vrow.wrap .tt>span,.vrow.wrap .st{white-space:normal;line-height:1.25}
+.vrow.wrap .st{margin-top:2px}
+.st2{font-size:14px;color:var(--sec);margin-top:2px;display:flex;align-items:center;gap:5px;white-space:nowrap;overflow:hidden}
+.sq{display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 .5px 0 rgba(255,255,255,.35)}
+.mono{border-radius:50%;color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;letter-spacing:0;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--tint-fill) 55%,#fff),var(--tint-fill))}
+.mono.grey{background:linear-gradient(180deg,#A9B1BC,#7F8893)}
+.empty{padding:22px 18px;text-align:center;color:var(--sec);font-size:15px;line-height:1.45}
+
+/* ---- controls ---- */
+.btn{display:flex;align-items:center;justify-content:center;gap:7px;border:none;border-radius:999px;font-weight:600;letter-spacing:-.02em;cursor:pointer;width:100%}
+.btnrow{display:flex;gap:10px}
+.seg{height:36px;border-radius:18px;background:var(--fill);display:flex;padding:2px}
+.seg button{flex:1;min-width:0;border:none;background:transparent;font-size:14px;font-weight:600;color:var(--label);border-radius:16px;cursor:pointer;letter-spacing:-.012em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6px}
+.seg button.on{background:var(--seg-on);box-shadow:0 3px 8px rgba(0,0,0,.12),0 0 0 .5px rgba(0,0,0,.04)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips.scroll{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:0 16px;scrollbar-width:none}
+.chips.scroll::-webkit-scrollbar{display:none}
+.chip{position:relative;height:36px;padding:0 14px;border-radius:18px;background:var(--fill);display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:500;color:var(--label);border:none;cursor:pointer;white-space:nowrap;letter-spacing:-.015em;flex-shrink:0}
+.chip.on{background:var(--tint-soft);color:var(--tint)}
+.chip.static{cursor:default}
+.get{height:30px;padding:0 15px;border-radius:15px;background:var(--tint-soft);color:var(--tint);font-weight:700;font-size:15px;display:flex;align-items:center;letter-spacing:-.01em;flex-shrink:0;border:none;cursor:pointer}
+.sw{width:51px;height:31px;border-radius:16px;border:none;background:var(--fill);position:relative;cursor:pointer;flex-shrink:0;transition:background .2s;padding:0}
+.sw i{position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.15),0 3px 1px rgba(0,0,0,.06);transition:transform .22s}
+.sw.on{background:var(--green)} .sw.on i{transform:translateX(20px)} .sw:disabled{opacity:.4}
+.ta{width:100%;min-height:88px;border:none;outline:none;border-radius:16px;background:var(--card2);padding:12px 14px;font-size:17px;color:var(--label);letter-spacing:-.02em;resize:none;line-height:1.35;display:block}
+.ta::placeholder{color:var(--ter)}
+.sheet .ta{background:var(--fill)}
+.search{display:flex;align-items:center;gap:8px;height:40px;border-radius:12px;background:var(--fill);padding:0 10px;color:var(--sec)}
+.search input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-size:17px;color:var(--label);letter-spacing:-.02em;height:100%}
+.search input::placeholder{color:var(--sec)}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);margin:6px -4px 0}
+.kkey{height:56px;border:none;background:transparent;font-size:28px;font-weight:400;color:var(--label);border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kkey:active{background:var(--fill)}
+.bigamt{text-align:center;font-weight:700;letter-spacing:-.045em;line-height:1.05;margin-top:10px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bigamt small{font-size:26px;font-weight:600;color:var(--sec);letter-spacing:-.02em;vertical-align:top;position:relative;top:7px;margin-right:6px}
+.catgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cat{display:flex;align-items:center;gap:10px;min-height:62px;padding:10px 12px;border:none;border-radius:16px;background:var(--card);text-align:left;cursor:pointer;color:var(--label);min-width:0}
+.sheet .cat{background:var(--card2)}
+.cat.on{box-shadow:inset 0 0 0 2px var(--tint)}
+.cat span{font-size:15px;font-weight:500;letter-spacing:-.015em;line-height:1.25;overflow-wrap:anywhere;min-width:0}
+.stepper{display:flex;align-items:center;gap:4px;background:var(--fill);border-radius:10px;height:34px;padding:0 2px}
+.stepper button{width:40px;height:30px;border:none;background:transparent;color:var(--label);display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:8px}
+.stepper button:disabled{opacity:.3}
+.stepper b{min-width:22px;text-align:center;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* ---- liquid glass ---- */
+.glass{background:var(--glass-bg);-webkit-backdrop-filter:blur(22px) saturate(1.9);backdrop-filter:blur(22px) saturate(1.9);border:.5px solid var(--glass-brd);box-shadow:var(--glass-shadow)}
+.gbtn{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--label);cursor:pointer;padding:0;flex-shrink:0}
+.navrow{height:56px;display:flex;align-items:center;justify-content:space-between;padding:6px 16px 0;position:relative;z-index:2}
+.navtitle{font-size:17px;font-weight:600;letter-spacing:-.022em;flex:1;text-align:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 8px}
+.tabbar{position:absolute;left:12px;right:88px;bottom:calc(max(env(safe-area-inset-bottom,0px),20px) - 6px);height:64px;border-radius:32px;display:flex;padding:4px;z-index:30}
+.tabbar.wide{right:12px}
+.tab{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border:none;background:transparent;border-radius:28px;font-size:10px;font-weight:600;color:var(--tabidle);cursor:pointer;padding:0;letter-spacing:0;position:relative}
+.tab.on{color:var(--tint);background:var(--fill)}
+.tab .dotn{position:absolute;top:6px;left:calc(50% + 8px);min-width:17px;height:17px;border-radius:9px;background:var(--red);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.fab{position:absolute;right:12px;bottom:calc(max(env(safe-area-inset-bottom,0px),20px) - 6px);width:64px;height:64px;border-radius:50%;z-index:30;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;padding:0}
+.fab.glass{background:var(--tint-fill);background:color-mix(in srgb,var(--tint-fill) 88%,transparent);border-color:rgba(255,255,255,.4)}
+.edgefade{position:absolute;left:0;right:0;bottom:0;height:130px;z-index:20;pointer-events:none;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--bg) 88%,transparent) 70%)}
+.menu-ov{position:absolute;inset:0;z-index:40;touch-action:none}
+.sheet-open .vs-scroll{overflow:hidden;touch-action:none}
+.sheet-open,.sheet-open body{overscroll-behavior:none}
+.menu{position:absolute;z-index:41;min-width:250px;border-radius:22px;padding:6px;animation:vpop .18s ease}
+.mi{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;height:48px;padding:0 14px;border:none;background:transparent;font-size:17px;letter-spacing:-.02em;border-radius:14px;cursor:pointer;color:var(--label)}
+.mi:active{background:var(--fill)}
+.toast{position:absolute;left:50%;transform:translateX(-50%);top:10px;z-index:60;max-width:calc(100% - 140px);pointer-events:none;display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:rgba(28,28,30,.88);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);color:#fff;font-size:15px;font-weight:500;letter-spacing:-.015em;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:vfade .2s ease;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---- sheets ---- */
+.ov{position:fixed;inset:0;overscroll-behavior:contain;background:var(--overlay);display:flex;align-items:flex-end;justify-content:center;z-index:50;animation:vfade .2s ease}
+.sheet{background:var(--sheet);width:100%;max-width:430px;max-height:94%;border-radius:38px 38px 0 0;display:flex;flex-direction:column;animation:vup .34s cubic-bezier(.2,.9,.25,1);box-shadow:0 -10px 40px rgba(0,0,0,.12)}
+.grab{width:36px;height:5px;border-radius:3px;background:var(--ter);margin:7px auto 0;flex-shrink:0}
+.shead{display:flex;align-items:center;justify-content:space-between;padding:4px 16px 6px;flex-shrink:0;gap:8px}
+.stitle{font-size:17px;font-weight:600;letter-spacing:-.022em;text-align:center;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sx{background:var(--fill);border:none}
+.sbody{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:8px 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.slab{font-size:13px;color:var(--sec);text-transform:uppercase;padding:18px 4px 8px;letter-spacing:-.005em}
+.slab:first-child{padding-top:6px}
+.sgroup{background:var(--card2);border-radius:16px;overflow:hidden}
+.sgroup .li{background:var(--card2)}
+.done{position:fixed;left:50%;top:44%;z-index:80;min-width:156px;max-width:250px;padding:20px 20px 16px;border-radius:26px;text-align:center;pointer-events:none;color:#fff;
+  background:rgba(28,28,30,.84);-webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6);box-shadow:0 18px 50px -12px rgba(0,0,0,.35);
+  transform:translate(-50%,-50%);animation:vdoneIn .2s cubic-bezier(.2,.9,.3,1) both,vdoneOut .24s ease-in 1s forwards}
+.done-ic{width:50px;height:50px;display:block;margin:0 auto 10px}
+.done-c{fill:#30D158;transform-origin:26px 26px;animation:vdoneRing .32s cubic-bezier(.2,.9,.3,1.15) both}
+.done-k{fill:none;stroke:#fff;stroke-width:4.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:32;stroke-dashoffset:32;animation:vdoneDraw .3s .14s ease-out forwards}
+.done-t{font-size:15px;font-weight:600;letter-spacing:-.015em;line-height:1.3}
+@keyframes vdoneIn{from{opacity:0;transform:translate(-50%,-50%) scale(.92)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes vdoneOut{to{opacity:0;transform:translate(-50%,-50%) scale(.97)}}
+@keyframes vdoneRing{from{transform:scale(.55)}to{transform:scale(1)}}
+@keyframes vdoneDraw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion: reduce){.done-k{stroke-dashoffset:0}}
+@keyframes vup{from{transform:translateY(100%)}to{transform:none}}
+@keyframes vfade{from{opacity:0}to{opacity:1}}
+@keyframes vpop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+
+/* ---- home ---- */
+.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(180deg,#A9B1BC,#7F8893);color:#fff;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-bottom:3px;border:none;cursor:pointer;flex-shrink:0;padding:0}
+.hero{border-radius:24px;position:relative;overflow:hidden;color:#fff;padding:16px 20px 18px;
+  background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--tint-fill) 45%,#fff) 0%,transparent 62%),linear-gradient(160deg,color-mix(in srgb,var(--tint-fill) 92%,#fff) 0%,color-mix(in srgb,var(--tint-fill) 70%,#000) 100%);
+  box-shadow:0 14px 30px -14px color-mix(in srgb,var(--tint-fill) 70%,#000)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 38%);pointer-events:none}
+.hero>*{position:relative;z-index:1}
+.htop{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.hbrand{display:flex;align-items:center;gap:7px;font-size:16px;font-weight:600;letter-spacing:-.01em}
+.demo{font-size:11px;font-weight:700;letter-spacing:.04em;padding:3px 8px;border-radius:8px;background:rgba(255,255,255,.22)}
+.hl{font-size:13px;font-weight:600;opacity:.78;text-transform:uppercase;letter-spacing:.03em;margin-top:26px}
+.harea{display:inline-flex;align-items:center;gap:6px;font-size:30px;font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-top:2px;border:none;background:none;color:#fff;padding:0;cursor:pointer;max-width:100%;text-align:left}
+.harea span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hs{font-size:14px;opacity:.85;margin-top:5px;display:flex;align-items:center;gap:6px}
+.live{width:8px;height:8px;border-radius:50%;background:#30D158;box-shadow:0 0 0 3px rgba(48,209,88,.25);flex-shrink:0}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.qa{background:var(--card);border:none;border-radius:22px;padding:16px 16px 15px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;color:var(--label);cursor:pointer;min-width:0;min-height:124px}
+.qt{font-size:19px;font-weight:700;letter-spacing:-.025em;margin-top:auto;padding-top:14px}
+.qs{font-size:13px;color:var(--sec);margin-top:2px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.banner{display:flex;gap:12px;align-items:flex-start;background:var(--card);border-radius:22px;padding:14px 16px}
+.banner.danger{box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--red) 40%,transparent)}
+.banner .bt{font-size:16px;font-weight:600;letter-spacing:-.02em}
+.banner .bs{font-size:14px;color:var(--sec);line-height:1.4;margin-top:2px}
+.note{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--sec);line-height:1.4;padding:12px 14px;border-radius:16px;background:var(--tint-soft)}
+.note b{color:var(--label);font-weight:600}
+
+/* ---- pills, badges, ratings ---- */
+.pill{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:12px;font-size:13px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;flex-shrink:0}
+.pill.green{background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green-t)}
+.pill.orange{background:color-mix(in srgb,var(--orange) 16%,transparent);color:var(--orange-t)}
+.pill.red{background:color-mix(in srgb,var(--red) 14%,transparent);color:var(--red)}
+.pill.tint{background:var(--tint-soft);color:var(--tint)}
+.pill.grey{background:var(--fill);color:var(--sec)}
+.cred{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:15px;background:var(--card);font-size:14px;font-weight:600;color:var(--label);letter-spacing:-.012em;white-space:nowrap}
+.cred svg{color:var(--tint)}
+.rate{display:inline-flex;align-items:center;gap:3px;color:var(--label)}
+.rate svg{color:#FF9F0A}
+.stars{display:flex;gap:6px;justify-content:center}
+.stars button{border:none;background:none;padding:4px;cursor:pointer;color:var(--ter)}
+.stars button.on{color:#FF9F0A}
+
+/* ---- profile page ---- */
+.ppage{position:relative}
+.poster{position:absolute;left:0;right:0;top:0;height:360px;background:linear-gradient(180deg,color-mix(in srgb,var(--tint) 30%,var(--bg)) 0%,color-mix(in srgb,var(--tint) 12%,var(--bg)) 45%,var(--bg) 100%)}
+.bigmono{width:104px;height:104px;border-radius:50%;margin:0 auto;color:#fff;font-size:42px;font-weight:600;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--tint-fill) 55%,#fff),var(--tint-fill));box-shadow:0 14px 30px -10px color-mix(in srgb,var(--tint-fill) 60%,transparent)}
+.pname{font-size:28px;font-weight:700;letter-spacing:-.03em;text-align:center;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:7px}
+.plevel{font-size:15px;color:var(--sec);text-align:center;margin-top:2px}
+.creds{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+.acts{display:flex;gap:8px;margin-top:18px}
+.acts button{flex:1;min-width:0;height:64px;border-radius:16px;background:var(--card);border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:var(--tint);font-size:12px;font-weight:600;cursor:pointer;letter-spacing:-.005em;padding:0}
+.acts button:disabled{color:var(--ter);cursor:default}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.tile{background:var(--card);border-radius:18px;padding:12px 6px 11px;text-align:center;min-width:0}
+.tile .v{font-size:20px;font-weight:700;letter-spacing:-.03em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tile .u{font-size:12px;color:var(--sec);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.review{padding:14px 16px}
+.review p{margin:6px 0 0;font-size:15px;line-height:1.4;letter-spacing:-.012em}
+.review .who{font-size:13px;color:var(--sec);margin-top:6px}
+.stickyact{position:sticky;bottom:0;padding:12px 16px calc(max(env(safe-area-inset-bottom,0px),16px) + 4px);background:linear-gradient(to bottom,transparent,var(--bg) 30%);z-index:5}
+
+/* ---- quotes, timeline ---- */
+.qcard{background:var(--card);border-radius:22px;padding:14px 16px 16px}
+.qcard + .qcard{margin-top:12px}
+.qprice{font-size:30px;font-weight:700;letter-spacing:-.035em;margin-top:10px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.qprice small{font-size:17px;color:var(--sec);font-weight:600;margin-right:4px;letter-spacing:-.01em}
+.qmeta{font-size:14px;color:var(--sec);margin-top:3px}
+.qnote{font-size:15px;line-height:1.4;margin-top:10px;letter-spacing:-.012em}
+.tl{padding:6px 16px 10px}
+.tls{display:flex;gap:12px;position:relative;padding:8px 0}
+.tls:not(:last-child)::after{content:"";position:absolute;left:11px;top:32px;bottom:-8px;width:2px;background:var(--sep)}
+.tls .d{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--fill);color:var(--sec)}
+.tls.ok .d{background:var(--green);color:#fff}
+.tls.now .d{background:var(--tint-fill);color:#fff}
+.tls b{font-size:16px;font-weight:600;letter-spacing:-.02em;display:block}
+.tls span{font-size:14px;color:var(--sec)}
+.swatches{display:flex;gap:14px;padding:12px 16px 14px}
+.swatch{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;padding:0;flex-shrink:0}
+.swatch.on{box-shadow:0 0 0 3px var(--card),0 0 0 5px var(--label)}
+.swl{font-size:12px;color:var(--sec);text-align:center;margin-top:6px}
+
+/* ---- welcome ---- */
+.appicon{display:flex;align-items:center;justify-content:center;margin:0 auto;flex-shrink:0;color:#fff;
+  background:radial-gradient(90% 80% at 85% 10%,color-mix(in srgb,var(--tint-fill) 40%,#fff),transparent 60%),linear-gradient(160deg,color-mix(in srgb,var(--tint-fill) 90%,#fff),color-mix(in srgb,var(--tint-fill) 65%,#000));
+  box-shadow:0 18px 36px -14px color-mix(in srgb,var(--tint-fill) 70%,#000),inset 0 1px 0 rgba(255,255,255,.3)}
+.feats{margin-top:28px;display:flex;flex-direction:column;gap:22px;padding:0 14px}
+.feat{display:flex;gap:16px;align-items:flex-start;color:var(--tint)}
+.feat b{display:block;font-size:17px;font-weight:600;letter-spacing:-.02em;color:var(--label)}
+.feat span{display:block;font-size:15px;color:var(--sec);margin-top:2px;line-height:1.35}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  /* keep the app on the phone so it opens without signal (needs https) */
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost") && /github\.io$|localhost/.test(location.hostname)) {
+    addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+  }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.28.4/babel.min.js"></script>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useMemo } = React;
+
+/* ============================================================
+   Find Engineers — clickable demo.
+   Everything here is SAMPLE DATA: no real people, no real requests.
+   Customer side: Fix (repairs) and Build (projects with quotes).
+   Professional side: availability, incoming jobs, sending quotes.
+   Admin: verification queue (credentials checked by hand).
+   ============================================================ */
+
+/* ---------- icons: one family, 24pt grid, round caps ---------- */
+function iconWeight(size) {
+  return size <= 14 ? 2.3 : size <= 17 ? 2.1 : size <= 21 ? 1.9 : size <= 26 ? 1.75 : size <= 40 ? 1.6 : 1.45;
+}
+function IconBase({ size = 24, color = "currentColor", strokeWidth, fill = "none", style, children, ...rest }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color}
+         strokeWidth={strokeWidth || iconWeight(size)} strokeLinecap="round" strokeLinejoin="round"
+         style={{ flexShrink: 0, display: "block", ...(style || {}) }} aria-hidden="true" {...rest}>
+      {children}
+    </svg>
+  );
+}
+const Dot = ({ cx, cy, r = 1.1, color = "currentColor" }) => <circle cx={cx} cy={cy} r={r} fill={color} stroke="none" />;
+let maskSeq = 0;
+/* solid tab icon: fill a shape and knock out its detail lines */
+function Knock({ size = 24, color = "currentColor", shape, cut, cutWidth = 1.9 }) {
+  const id = useMemo(() => "fe-k" + ++maskSeq, []);
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" style={{ flexShrink: 0, display: "block" }} aria-hidden="true">
+      <defs>
+        <mask id={id}>
+          <rect width="24" height="24" fill="#fff" />
+          <g stroke="#000" strokeWidth={cutWidth} fill="none" strokeLinecap="round" strokeLinejoin="round">{cut}</g>
+        </mask>
+      </defs>
+      <g fill={color} stroke={color} strokeWidth="1.2" strokeLinejoin="round" mask={"url(#" + id + ")"}>{shape}</g>
+    </svg>
+  );
+}
+
+function Bolt(p){return <IconBase {...p}><path d="M13.4 2.8 5.6 13.4h6.1l-1.1 7.8 7.8-10.6h-6.1z"/></IconBase>;}
+function BoltOff(p){return <IconBase {...p}><path d="M13.4 2.8 10.6 6.6M8.2 9.9l-2.6 3.5h6.1l-1.1 7.8 3.4-4.6M16 13.3l2.4-2.7h-3.2"/><path d="m3.8 3.8 16.4 16.4"/></IconBase>;}
+function Breaker(p){return <IconBase {...p}><rect x="5.5" y="3" width="13" height="18" rx="2.6"/><rect x="9.3" y="6.8" width="5.4" height="10.4" rx="1.6"/><path d="M9.3 12.9h5.4"/></IconBase>;}
+function Flame(p){return <IconBase {...p}><path d="M12 21c-3.6 0-6.2-2.5-6.2-5.8 0-3.5 2.6-5.1 3.4-8.6 2 1.2 3 3 3.1 4.7 1-.6 1.7-1.8 1.8-3.1 2.3 1.7 4.1 4.3 4.1 7 0 3.3-2.6 5.8-6.2 5.8Z"/></IconBase>;}
+function Socket(p){return <IconBase {...p}><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M12 7.6v3.1M8.2 14.6h2.4M13.4 14.6h2.4"/></IconBase>;}
+function Bulb(p){return <IconBase {...p}><path d="M9.2 17.6h5.6M10.2 20.6h3.6"/><path d="M12 3.4a5.9 5.9 0 0 0-3.6 10.5c.6.5 1 1.2 1 2v1.7h5.2v-1.7c0-.8.4-1.5 1-2A5.9 5.9 0 0 0 12 3.4Z"/></IconBase>;}
+function Meter(p){return <IconBase {...p}><rect x="4.5" y="3" width="15" height="18" rx="2.6"/><rect x="7.6" y="6.2" width="8.8" height="4.6" rx="1.1"/><Dot cx={9} cy={14.4}/><Dot cx={12} cy={14.4}/><Dot cx={15} cy={14.4}/><Dot cx={9} cy={17.6}/><Dot cx={12} cy={17.6}/><Dot cx={15} cy={17.6}/></IconBase>;}
+function Snowflake(p){return <IconBase {...p}><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.5 4.5 12 7l2.5-2.5M9.5 19.5 12 17l2.5 2.5"/></IconBase>;}
+function Droplet(p){return <IconBase {...p}><path d="M12 3.4s-6 6.6-6 11a6 6 0 0 0 12 0c0-4.4-6-11-6-11Z"/><path d="M9.3 14.7a2.8 2.8 0 0 0 2.6 2.7"/></IconBase>;}
+function Sun(p){return <IconBase {...p}><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2M12 19.2v2M2.8 12h2M19.2 12h2M5.5 5.5l1.4 1.4M17.1 17.1l1.4 1.4M5.5 18.5l1.4-1.4M17.1 6.9l1.4-1.4"/></IconBase>;}
+function Swap(p){return <IconBase {...p}><path d="M4 8.5h13.5M14 5l3.5 3.5L14 12M20 15.5H6.5M10 12l-3.5 3.5L10 19"/></IconBase>;}
+function HouseLine(p){return <IconBase {...p}><path d="M4 10.2 12 3.8l8 6.4V19a1.5 1.5 0 0 1-1.5 1.5H15v-5.2a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5.2H5.5A1.5 1.5 0 0 1 4 19z"/></IconBase>;}
+function Redo(p){return <IconBase {...p}><path d="M19.5 9A8 8 0 0 0 5.2 7.2M4.5 15a8 8 0 0 0 14.3 1.8"/><path d="M5 3.5v4h4M19 20.5v-4h-4"/></IconBase>;}
+function ClipCheck(p){return <IconBase {...p}><path d="M9 4.6H7.5A2.5 2.5 0 0 0 5 7.1v11.4A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V7.1a2.5 2.5 0 0 0-2.5-2.5H15"/><rect x="9" y="3" width="6" height="3.2" rx="1"/><path d="m9 13.5 2.2 2.2 4-4.2"/></IconBase>;}
+function Compass(p){return <IconBase {...p}><circle cx="12" cy="5" r="1.9"/><path d="M11 6.7 5.6 20.5M13 6.7l5.4 13.8M7.6 15.6a10 10 0 0 0 8.8 0"/></IconBase>;}
+function Search(p){return <IconBase {...p}><circle cx="10.8" cy="10.8" r="6.6"/><path d="m15.7 15.7 4.6 4.6"/></IconBase>;}
+function Phone(p){return <IconBase {...p}><path d="M6.6 3.5h2.5l1.4 4-2 1.6a12 12 0 0 0 6.4 6.4l1.6-2 4 1.4v2.5a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/></IconBase>;}
+function Chat(p){return <IconBase {...p}><path d="M12 3.5c4.7 0 8.5 3.4 8.5 7.6s-3.8 7.6-8.5 7.6a9.6 9.6 0 0 1-2.9-.4L4.5 20l1.2-3.7a7.2 7.2 0 0 1-2.2-5.2c0-4.2 3.8-7.6 8.5-7.6Z"/></IconBase>;}
+function Star(p){return <IconBase {...p}><path d="m12 3.8 2.5 5.1 5.6.8-4 4 .9 5.6-5-2.7-5 2.7.9-5.6-4-4 5.6-.8Z"/></IconBase>;}
+function StarFill(p){return <IconBase {...p} fill={p.color || "currentColor"}><path d="m12 3.8 2.5 5.1 5.6.8-4 4 .9 5.6-5-2.7-5 2.7.9-5.6-4-4 5.6-.8Z"/></IconBase>;}
+function ShieldCheck(p){return <IconBase {...p}><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.2 7.5 9.5 4.3-1.3 7.5-4.9 7.5-9.5V6z"/><path d="m8.8 12 2.3 2.3 4.3-4.6"/></IconBase>;}
+function IdCard(p){return <IconBase {...p}><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="10.8" r="2"/><path d="M5.6 16a3.1 3.1 0 0 1 5.8 0M14 10h4M14 13.5h3"/></IconBase>;}
+function Pin(p){return <IconBase {...p}><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.4"/></IconBase>;}
+function Clock(p){return <IconBase {...p}><circle cx="12" cy="12" r="8.8"/><path d="M12 7.5V12l3 2"/></IconBase>;}
+function Warn(p){return <IconBase {...p}><path d="M10.3 4.2 2.8 17.5A2 2 0 0 0 4.5 20.5h15a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9.5v4.5M12 17.2v.1"/></IconBase>;}
+function InfoCircle(p){return <IconBase {...p}><circle cx="12" cy="12" r="8.8"/><path d="M12 11v5.5M12 7.9v.1"/></IconBase>;}
+function Plus(p){return <IconBase {...p}><path d="M12 5v14M5 12h14"/></IconBase>;}
+function Minus(p){return <IconBase {...p}><path d="M5 12h14"/></IconBase>;}
+function Check(p){return <IconBase {...p}><path d="m5 12.5 4.5 4.5L19 7.5"/></IconBase>;}
+function XMark(p){return <IconBase {...p}><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></IconBase>;}
+function ChevronRight(p){return <IconBase {...p}><path d="m9.5 5.5 6.5 6.5-6.5 6.5"/></IconBase>;}
+function ChevronLeft(p){return <IconBase {...p}><path d="m15 5-7 7 7 7"/></IconBase>;}
+function DeleteLeft(p){return <IconBase {...p}><path d="M20 5.5H9.3a2 2 0 0 0-1.5.7L3 12l4.8 5.8a2 2 0 0 0 1.5.7H20a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2Z"/><path d="m11.5 9.5 5 5M16.5 9.5l-5 5"/></IconBase>;}
+function ChevronDown(p){return <IconBase {...p}><path d="m6 9.5 6 6 6-6"/></IconBase>;}
+function PersonCircle(p){return <IconBase {...p}><circle cx="12" cy="12" r="8.8"/><circle cx="12" cy="10" r="3"/><path d="M6.6 18a6.2 6.2 0 0 1 10.8 0"/></IconBase>;}
+function Briefcase(p){return <IconBase {...p}><rect x="3.5" y="7" width="17" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></IconBase>;}
+function DocText(p){return <IconBase {...p}><path d="M6.5 3h7.5l4.5 4.5V19a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M13.5 3v5h5M8.5 12.5h7M8.5 16.5h7"/></IconBase>;}
+function HalfCircle(p){return <IconBase {...p}><circle cx="12" cy="12" r="8.8"/><path d="M12 3.2a8.8 8.8 0 0 1 0 17.6z" fill="currentColor" stroke="none"/></IconBase>;}
+function Swap2(p){return <IconBase {...p}><circle cx="9" cy="8.2" r="3.3"/><path d="M3.2 19.8a5.8 5.8 0 0 1 9.6-4.4M15 13.5h6M18 10.5l3 3-3 3"/></IconBase>;}
+function Users(p){return <IconBase {...p}><circle cx="9" cy="8" r="3.4"/><path d="M3 19.5a6 6 0 0 1 12 0"/><path d="M15.5 4.9a3.2 3.2 0 0 1 0 6.2M17.5 13.9a6 6 0 0 1 3.5 5.6"/></IconBase>;}
+
+/* verified mark next to a name */
+function Verified({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" style={{ flexShrink: 0, display: "block" }} aria-label="Verified" role="img">
+      <path fill="var(--tint-fill)" d="M12 1.8l2.4 1.8 3-.2.9 2.9 2.6 1.6-.8 2.9 1 2.8-2.4 1.8-.6 3-3 .3-2 2.3L12 20.2l-2.8 1.1-2-2.3-3-.3-.6-3-2.4-1.8 1-2.8-.8-2.9 2.6-1.6.9-2.9 3 .2z"/>
+      <path d="m8.2 12.1 2.6 2.6 5-5.2" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+/* tab icons: outline idle, solid with knock-out when selected */
+function TabHome(p){return <IconBase {...p}><path d="M4 10.4 12 4.2l8 6.2v8.8a1.3 1.3 0 0 1-1.3 1.3h-3.5v-5.2a1.2 1.2 0 0 0-1.2-1.2h-4a1.2 1.2 0 0 0-1.2 1.2v5.2H5.3A1.3 1.3 0 0 1 4 19.2z"/></IconBase>;}
+function TabHomeOn({color="currentColor",...p}){return <IconBase {...p} color={color}><path fill={color} stroke={color} strokeWidth="1.2" d="M3.6 10.3 12 3.7l8.4 6.6v8.9a1.6 1.6 0 0 1-1.6 1.6h-3.6v-5.1a1.3 1.3 0 0 0-1.3-1.3H10.1a1.3 1.3 0 0 0-1.3 1.3v5.1H5.2a1.6 1.6 0 0 1-1.6-1.6z"/></IconBase>;}
+function TabFind(p){return <Search {...p}/>;}
+function TabFindOn(p){return <Search {...p} strokeWidth={2.9}/>;}
+function TabReq(p){return <IconBase {...p}><path d="M9 4.6H7.5A2.5 2.5 0 0 0 5 7.1v11.4A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V7.1a2.5 2.5 0 0 0-2.5-2.5H15"/><rect x="9" y="3" width="6" height="3.2" rx="1"/><path d="M9 11h6M9 14.5h6M9 18h3.5"/></IconBase>;}
+function TabReqOn(p){return <Knock {...p} shape={<path d="M7.5 4.2h9a2.8 2.8 0 0 1 2.8 2.8v11.6a2.8 2.8 0 0 1-2.8 2.8h-9a2.8 2.8 0 0 1-2.8-2.8V7a2.8 2.8 0 0 1 2.8-2.8Z"/>} cut={<><path d="M9 10.8h6M9 14.3h6M9 17.8h3.5"/><rect x="8.6" y="2.6" width="6.8" height="3.8" rx="1.2" fill="#000"/></>} />;}
+function TabJobs(p){return <Briefcase {...p}/>;}
+function TabJobsOn(p){return <Knock {...p} shape={<><rect x="3.2" y="6.8" width="17.6" height="13.6" rx="2.6"/><path fill="none" strokeWidth="1.9" d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/></>} cut={<path d="M3.5 12.6h17"/>} />;}
+function TabDocs(p){return <DocText {...p}/>;}
+function TabDocsOn(p){return <Knock {...p} shape={<path d="M6.5 2.8h7.6l4.7 4.7V19a2.2 2.2 0 0 1-2.2 2.2h-10A2.2 2.2 0 0 1 4.4 19V5A2.2 2.2 0 0 1 6.5 2.8Z"/>} cut={<path d="M13.5 3v5h5M8.5 12.5h7M8.5 16.5h7"/>} />;}
+function TabMe(p){return <PersonCircle {...p}/>;}
+function TabMeOn(p){return <Knock {...p} shape={<circle cx="12" cy="12" r="9.6"/>} cut={<><circle cx="12" cy="10" r="3" fill="#000"/><path d="M6.4 18.2a6.4 6.4 0 0 1 11.2 0" fill="#000"/></>} />;}
+function TabMore(p){return <IconBase {...p}><circle cx="12" cy="12" r="8.8"/><Dot cx={7.9} cy={12} r={1.15}/><Dot cx={12} cy={12} r={1.15}/><Dot cx={16.1} cy={12} r={1.15}/></IconBase>;}
+function TabMoreOn({color="currentColor",...p}){return <IconBase {...p} color={color}><path fill={color} stroke="none" fillRule="evenodd" d="M12 2.3a9.7 9.7 0 1 1 0 19.4 9.7 9.7 0 0 1 0-19.4ZM7.8 10.55a1.45 1.45 0 1 0 0 2.9 1.45 1.45 0 0 0 0-2.9Zm4.2 0a1.45 1.45 0 1 0 0 2.9 1.45 1.45 0 0 0 0-2.9Zm4.2 0a1.45 1.45 0 1 0 0 2.9 1.45 1.45 0 0 0 0-2.9Z"/></IconBase>;}
+
+/* ---------- sample data (all invented for the demo) ---------- */
+const AREAS = [
+  { name: "East Legon", lat: 5.635, lng: -0.157 },
+  { name: "Madina", lat: 5.683, lng: -0.166 },
+  { name: "Adenta", lat: 5.706, lng: -0.166 },
+  { name: "Haatso", lat: 5.665, lng: -0.205 },
+  { name: "Dome", lat: 5.65, lng: -0.234 },
+  { name: "Achimota", lat: 5.615, lng: -0.23 },
+  { name: "Airport Residential", lat: 5.605, lng: -0.18 },
+  { name: "Cantonments", lat: 5.578, lng: -0.172 },
+  { name: "Labone", lat: 5.565, lng: -0.17 },
+  { name: "Osu", lat: 5.556, lng: -0.182 },
+  { name: "Spintex", lat: 5.633, lng: -0.105 },
+  { name: "Teshie", lat: 5.583, lng: -0.106 },
+  { name: "Tema", lat: 5.669, lng: -0.017 },
+  { name: "Lapaz", lat: 5.606, lng: -0.252 },
+  { name: "Dansoman", lat: 5.548, lng: -0.265 },
+  { name: "Kasoa", lat: 5.535, lng: -0.425 },
+];
+const areaOf = (n) => AREAS.find((a) => a.name === n) || AREAS[0];
+function kmBetween(a, b) {
+  const A = areaOf(a), B = areaOf(b), R = 6371, r = Math.PI / 180;
+  const dLat = (B.lat - A.lat) * r, dLng = (B.lng - A.lng) * r;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(A.lat * r) * Math.cos(B.lat * r) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+const kmText = (k) => (k < 1 ? "under 1 km" : Math.round(k) + " km");
+
+const FIX = [
+  { id: "nopower", label: "No power", sub: "All or part of the building is off", Icon: BoltOff, color: "#5856D6" },
+  { id: "tripping", label: "Breaker keeps tripping", sub: "Trips when things are switched on", Icon: Breaker, color: "#FF9500" },
+  { id: "sparks", label: "Sparks or burning smell", sub: "Treat as an emergency", Icon: Flame, color: "#FF3B30", danger: true },
+  { id: "sockets", label: "Sockets & switches", sub: "Loose, broken or not working", Icon: Socket, color: "#007AFF" },
+  { id: "lights", label: "Lights", sub: "Fittings, flickering, new points", Icon: Bulb, color: "#E8A800" },
+  { id: "meter", label: "Prepaid meter", sub: "No credit showing, tripping, faults", Icon: Meter, color: "#30B0C7" },
+  { id: "appliance", label: "AC & appliances", sub: "Install a split AC, cooker, pump", Icon: Snowflake, color: "#32ADE6" },
+  { id: "heater", label: "Water heater", sub: "Install or repair", Icon: Droplet, color: "#AF52DE" },
+];
+const BUILD = [
+  { id: "newbuild", label: "New building wiring", sub: "Full wiring for a new house or shop", Icon: HouseLine, color: "#5856D6" },
+  { id: "rewire", label: "Rewiring", sub: "Replace old or unsafe wiring", Icon: Redo, color: "#FF9500" },
+  { id: "solar", label: "Solar & inverter", sub: "Panels, batteries, backup", Icon: Sun, color: "#E8A800" },
+  { id: "changeover", label: "Generator changeover", sub: "Safe switching to a generator", Icon: Swap, color: "#8E8E93" },
+  { id: "inspection", label: "Inspection & certificate", sub: "Check wiring before connection", Icon: ClipCheck, color: "#30B0C7" },
+  { id: "design", label: "Design & drawings", sub: "Load schedule, layouts (engineers)", Icon: Compass, color: "#AF52DE", engineer: true },
+];
+const CATS = [...FIX, ...BUILD];
+const catOf = (id) => CATS.find((c) => c.id === id) || FIX[0];
+const ALL_FIX = FIX.map((c) => c.id);
+
+const URGENCY = [
+  { id: "now", label: "Emergency", long: "Emergency · now" },
+  { id: "today", label: "Today", long: "Today" },
+  { id: "week", label: "This week", long: "This week" },
+];
+const TIMELINE = [
+  { id: "asap", label: "As soon as possible" },
+  { id: "month", label: "Within a month" },
+  { id: "quarter", label: "In 2–3 months" },
+];
+const BUILDINGS = ["House", "Apartment", "Shop", "Office"];
+
+/* level: "Certified Electrician" | "Electrical Engineer"; ec: Energy Commission
+   wiring certificate class; eng: Engineering Council registration */
+const SAMPLE_PROS = [
+  { id: "kwame", name: "Kwame Mensah", level: "Certified Electrician", ec: "Domestic", eng: false, base: "East Legon",
+    areas: ["East Legon", "Madina", "Adenta", "Haatso", "Airport Residential", "Spintex"],
+    cats: [...ALL_FIX, "rewire", "changeover"], rating: 4.9, reviews: 86, jobs: 132, reply: 12, available: true, years: 9,
+    bio: "Domestic wiring and fault finding. I explain the problem before I fix it, and I clean up after.",
+    said: [["Found the fault in 20 minutes when two others had given up. Fair price.", "Akua · Madina"], ["On time and explained everything. The kitchen sockets are perfect now.", "Daniel · East Legon"]] },
+  { id: "abena", name: "Abena Owusu", level: "Electrical Engineer", ec: "Commercial", eng: true, base: "Airport Residential",
+    areas: ["Airport Residential", "Cantonments", "Labone", "Osu", "East Legon", "Achimota", "Spintex"],
+    cats: ["tripping", "nopower", "newbuild", "rewire", "solar", "inspection", "design", "changeover"], rating: 4.8, reviews: 41, jobs: 58, reply: 40, available: false, years: 7,
+    bio: "Electrical design for homes and offices: load schedules, wiring layouts and inspections.",
+    said: [["Her drawings made the contractor's job easy and the quote came in under budget.", "Mawuli · Cantonments"], ["Very professional inspection report.", "Grace · Osu"]] },
+  { id: "kofi", name: "Kofi Asante", level: "Certified Electrician", ec: "Domestic", eng: false, base: "Madina",
+    areas: ["Madina", "Adenta", "Haatso", "Dome", "East Legon"],
+    cats: [...ALL_FIX], rating: 4.7, reviews: 63, jobs: 97, reply: 18, available: true, years: 6,
+    bio: "Prepaid meter faults, AC installs and everyday repairs around Madina and Adenta.",
+    said: [["Installed two split ACs neatly, no mess.", "Esther · Adenta"], ["Came the same evening for a meter problem.", "Yaw · Madina"]] },
+  { id: "esi", name: "Esi Boateng", level: "Electrical Engineer", ec: "Commercial", eng: true, base: "Labone",
+    areas: ["Labone", "Osu", "Cantonments", "Airport Residential", "Teshie", "Spintex"],
+    cats: ["design", "inspection", "solar", "changeover", "newbuild", "rewire"], rating: 4.9, reviews: 29, jobs: 34, reply: 55, available: false, years: 11,
+    bio: "Solar and backup power systems, sized properly. Inspections and design for new buildings.",
+    said: [["Sized our solar system honestly instead of overselling.", "Kojo · Teshie"]] },
+  { id: "yaw", name: "Yaw Darko", level: "Certified Electrician", ec: "Commercial", eng: false, base: "Spintex",
+    areas: ["Spintex", "Teshie", "Tema", "East Legon", "Labone"],
+    cats: ["nopower", "tripping", "sparks", "sockets", "lights", "changeover", "rewire", "newbuild"], rating: 4.6, reviews: 112, jobs: 180, reply: 9, available: true, years: 14,
+    bio: "Shops, offices and homes. Fast response for outages and dangerous faults.",
+    said: [["Came within the hour when our shop lost power.", "Selasi · Spintex"], ["Good work, a little more expensive than expected.", "Nii · Teshie"]] },
+  { id: "ama", name: "Ama Frimpong", level: "Certified Electrician", ec: "Domestic", eng: false, base: "Adenta",
+    areas: ["Adenta", "Madina", "Dome", "Haatso"],
+    cats: ["solar", "lights", "sockets", "nopower", "heater", "appliance"], rating: 4.8, reviews: 37, jobs: 52, reply: 25, available: true, years: 5,
+    bio: "Solar and inverter installs, lighting and sockets.",
+    said: [["Our inverter has worked perfectly since she set it up.", "Fiifi · Dome"]] },
+  { id: "kojo", name: "Kojo Appiah", level: "Certified Electrician", ec: "Domestic", eng: false, base: "Dansoman",
+    areas: ["Dansoman", "Lapaz", "Achimota", "Kasoa"],
+    cats: [...ALL_FIX], rating: 4.5, reviews: 48, jobs: 71, reply: 15, available: true, years: 8,
+    bio: "Repairs and installs across Dansoman, Lapaz and Kasoa.",
+    said: [["Fixed the tripping problem for good.", "Afia · Lapaz"]] },
+  { id: "nana", name: "Nana Adjei", level: "Electrical Engineer", ec: "Industrial", eng: true, base: "Tema",
+    areas: ["Tema", "Spintex", "Teshie"],
+    cats: ["design", "inspection", "changeover", "newbuild", "rewire", "solar"], rating: 4.7, reviews: 22, jobs: 30, reply: 60, available: false, years: 12,
+    bio: "Industrial and commercial installations, generators and changeover panels.",
+    said: [["Clear report and safe changeover install for our factory.", "Ops manager · Tema"]] },
+];
+
+/* applicants waiting in the admin queue */
+const SAMPLE_APPLICANTS = [
+  { id: "efua", name: "Efua Asamoah", level: "Certified Electrician", ec: "Domestic", eng: false, base: "Achimota",
+    areas: ["Achimota", "Lapaz", "Dome"], cats: ["nopower", "sockets", "lights", "tripping", "meter"], rating: 0, reviews: 0, jobs: 0, reply: 30, available: true, years: 4,
+    bio: "Newly listed. Repairs and lighting around Achimota.", said: [],
+    docs: { card: "•••• 4821", ecNo: "Sample EC-D-•••19", engNo: null }, submitted: "Today, 08:12" },
+  { id: "kwesi", name: "Kwesi Ofori", level: "Electrical Engineer", ec: "Commercial", eng: true, base: "Cantonments",
+    areas: ["Cantonments", "Osu", "Labone", "Airport Residential"], cats: ["design", "inspection", "newbuild", "solar"], rating: 0, reviews: 0, jobs: 0, reply: 45, available: false, years: 6,
+    bio: "Newly listed. Building services design.", said: [],
+    docs: { card: "•••• 0937", ecNo: "Sample EC-C-•••07", engNo: "Sample ECG-•••52" }, submitted: "Yesterday" },
+  { id: "selorm", name: "Selorm Agbeko", level: "Certified Electrician", ec: null, eng: false, base: "Kasoa",
+    areas: ["Kasoa", "Dansoman"], cats: ["sockets", "lights"], rating: 0, reviews: 0, jobs: 0, reply: 30, available: true, years: 2,
+    bio: "Newly listed.", said: [],
+    docs: { card: "•••• 6610", ecNo: null, engNo: null }, submitted: "Yesterday" },
+];
+
+/* the professional you play as in Professional view */
+const ME_PRO = "kwame";
+const SAMPLE_INBOX = [
+  { id: "in1", cat: "sparks", area: "Madina", urgency: "now", who: "Akosua", note: "The kitchen socket sparked when I plugged in the kettle. I have switched it off at the main.", mins: 3 },
+  { id: "in2", cat: "tripping", area: "East Legon", urgency: "today", who: "Daniel", note: "Main breaker trips when the AC and the iron are on together.", mins: 26 },
+  { id: "in3", cat: "lights", area: "Haatso", urgency: "week", who: "Mrs Quaye", note: "Six ceiling lights to install in two new rooms.", mins: 95 },
+];
+const SAMPLE_BRIEFS = [
+  { id: "br1", cat: "newbuild", building: "House", rooms: 4, area: "Adenta", timeline: "quarter", note: "Block work is done. Need full wiring with a 3-phase supply option.", quotes: 1, posted: "2 hours ago" },
+  { id: "br2", cat: "rewire", building: "Apartment", rooms: 2, area: "East Legon", timeline: "month", note: "Old aluminium wiring, sockets get warm. Want it replaced.", quotes: 0, posted: "Yesterday" },
+];
+
+/* sample quotes: the price model is invented for the demo */
+function sampleQuote(cat, rooms) {
+  const r = Math.max(1, rooms || 1);
+  return { newbuild: 3800 * r + 4000, rewire: 2200 * r + 1500, solar: 17500 + 1500 * r, changeover: 3600, inspection: 850 + 150 * r, design: 2400 + 650 * r }[cat] || 2000;
+}
+const QUOTE_SHAPES = [
+  { k: 0.92, materials: true, days: (c) => (c === "newbuild" ? 21 : c === "rewire" ? 6 : 4), note: "Price includes cables, sockets and the distribution board. Payment in two stages." },
+  { k: 1.0, materials: true, days: (c) => (c === "newbuild" ? 18 : c === "rewire" ? 5 : 3), note: "I visit first to confirm measurements, then the price is fixed." },
+  { k: 0.71, materials: false, days: (c) => (c === "newbuild" ? 25 : c === "rewire" ? 7 : 4), note: "Labour only — you buy materials from my list. I can go with you to the shop." },
+];
+
+/* ---------- storage (demo state lives on this phone only) ---------- */
+const KEY = "findeng:demo:v1";
+const blank = () => ({
+  area: "East Legon", requests: [], projects: [], seenWelcome: false, mode: "customer", accent: "indigo",
+  approved: [], rejected: [], pro: { available: true, accepted: [], declined: [], quotes: {} },
+});
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (s && typeof s === "object") return { ...blank(), ...s, pro: { ...blank().pro, ...(s.pro || {}) } };
+  } catch (e) {}
+  return blank();
+}
+function save(s) {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(s));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+const uid = () => Math.random().toString(36).slice(2, 9);
+const money = (n) => Math.round(n).toLocaleString("en-GH");
+const firstName = (n) => (n || "").split(" ")[0];
+const initials = (n) => (n || "?").split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+function ago(t) {
+  const m = Math.round((Date.now() - t) / 60000);
+  if (m < 1) return "just now";
+  if (m < 60) return m + " min ago";
+  const h = Math.round(m / 60);
+  if (h < 24) return h + (h === 1 ? " hour ago" : " hours ago");
+  const d = Math.round(h / 24);
+  return d + (d === 1 ? " day ago" : " days ago");
+}
+const replyText = (m) => (m < 60 ? "Replies in ~" + m + " min" : "Replies in ~1 hr");
+
+/* matching (spec §6): verified + offers the category + serves the area
+   (or within 12 km); sorted available → rating → reply speed → jobs */
+function matchPros(pros, { cat, area }) {
+  return pros
+    .filter((p) => p.cats.includes(cat) && (p.areas.includes(area) || kmBetween(p.base, area) <= 12))
+    .map((p) => ({ ...p, km: kmBetween(p.base, area) }))
+    .sort((a, b) => (b.available - a.available) || (b.rating - a.rating) || (a.reply - b.reply) || (b.jobs - a.jobs));
+}
+
+/* ---------- small UI pieces ---------- */
+function Btn({ label, onClick, kind = "primary", small = false, disabled = false, icon }) {
+  const k = {
+    primary: { background: "var(--tint-fill)", color: "#fff" },
+    ghost: { background: "var(--fill)", color: "var(--tint)" },
+    quiet: { background: "var(--fill)", color: "var(--label)" },
+    danger: { background: "var(--fill)", color: "var(--red)" },
+    green: { background: "var(--green)", color: "#fff" },
+  }[kind];
+  return (
+    <button className="btn vs-press" onClick={disabled ? undefined : onClick} disabled={disabled}
+      style={{ ...k, height: small ? 44 : 52, fontSize: small ? 15 : 17, opacity: disabled ? 0.35 : 1, cursor: disabled ? "default" : "pointer" }}>
+      {icon || null}{label}
+    </button>
+  );
+}
+function Sq({ Icon, color = "#8E8E93", size = 36 }) {
+  return (
+    <div className="sq" style={{ width: size, height: size, borderRadius: Math.round(size * 0.28), background: "linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,0))," + color }}>
+      {Icon ? <Icon size={Math.round(size * 0.56)} color="#fff" strokeWidth={2.1} /> : null}
+    </div>
+  );
+}
+function Mono({ name, size = 40, grey }) {
+  return <div className={"mono" + (grey ? " grey" : "")} style={{ width: size, height: size, fontSize: Math.round(size * 0.38) }}>{initials(name)}</div>;
+}
+function TitleBlock({ eyebrow, title, sub, right }) {
+  return (
+    <div className="titlebar">
+      <div style={{ minWidth: 0 }}>
+        {eyebrow ? <div className="eyebrow">{eyebrow}</div> : null}
+        <div className="lt">{title}</div>
+        {sub ? <div className="lsub truncate">{sub}</div> : null}
+      </div>
+      {right || null}
+    </div>
+  );
+}
+function Head({ title, action, onAction }) {
+  return (
+    <div className="sh">
+      <b>{title}</b>
+      {action ? <button className="link" onClick={onAction}>{action}</button> : null}
+    </div>
+  );
+}
+const Spacer = () => <div style={{ height: "calc(112px + env(safe-area-inset-bottom, 0px))" }} />;
+function RowBody({ lead, title, sub, right, chevron, sm, verified, wrap }) {
+  return (
+    <div className={"vrow" + (sm ? " sm" : "") + (wrap ? " wrap" : "")}>
+      {lead || null}
+      <div className="tx">
+        {title != null ? <div className="tt"><span>{title}</span>{verified ? <Verified size={16} /> : null}</div> : null}
+        {sub != null ? <div className="st">{sub}</div> : null}
+      </div>
+      {right || null}
+      {chevron ? <span className="chev"><ChevronRight size={15} strokeWidth={2.6} /></span> : null}
+    </div>
+  );
+}
+function Item({ onClick, inset = 64, children }) {
+  return (
+    <div className={"li" + (onClick ? " tap" : "")} style={{ "--inset": inset + "px" }} onClick={onClick}
+      role={onClick ? "button" : undefined} tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => (e.key === "Enter" || e.key === " ") && onClick() : undefined}>
+      {children}
+    </div>
+  );
+}
+function KV({ k, v, color }) {
+  return (
+    <div className="li vrow sm" style={{ "--inset": "16px" }}>
+      <div className="tx" style={{ fontSize: 17, letterSpacing: "-.02em" }}>{k}</div>
+      <div className="am" style={{ color: color || "var(--sec)", maxWidth: "60%", overflow: "hidden", textOverflow: "ellipsis" }}>{v}</div>
+    </div>
+  );
+}
+function Seg({ options, value, onChange, label }) {
+  return (
+    <div className="seg" role="radiogroup" aria-label={label}>
+      {options.map((o) => (
+        <button key={o.id} role="radio" aria-checked={value === o.id} className={value === o.id ? "on" : ""} onClick={() => onChange(o.id)}>{o.label}</button>
+      ))}
+    </div>
+  );
+}
+function Switch({ on, onChange, label }) {
+  return (
+    <button className={"sw" + (on ? " on" : "")} role="switch" aria-checked={on} aria-label={label} onClick={() => onChange(!on)}><i /></button>
+  );
+}
+function Rating({ p, small }) {
+  if (!p.reviews) return <span className="pill grey">New</span>;
+  return (
+    <span className="rate" style={{ fontSize: small ? 15 : 17 }}>
+      <StarFill size={small ? 13 : 15} />
+      <b style={{ fontWeight: 600 }}>{p.rating.toFixed(1)}</b>
+      <span style={{ color: "var(--sec)" }}>({p.reviews})</span>
+    </span>
+  );
+}
+function StatusPill({ status }) {
+  const m = {
+    sent: ["orange", "Waiting"], accepted: ["green", "Accepted"], done: ["grey", "Done"],
+    open: ["orange", "Getting quotes"], hired: ["green", "Hired"],
+  }[status] || ["grey", status];
+  return <span className={"pill " + m[0]}>{m[1]}</span>;
+}
+
+/* ---------- sheets: portalled, page frozen behind ---------- */
+let openSheets = 0;
+function useSheetLock(ovRef, bodyRef) {
+  useEffect(() => {
+    openSheets += 1;
+    document.documentElement.classList.add("sheet-open");
+    const ov = ovRef.current;
+    const guard = (e) => {
+      const b = bodyRef.current;
+      if (!b || !b.contains(e.target) || b.scrollHeight <= b.clientHeight + 1) { e.preventDefault(); return; }
+      const atTop = b.scrollTop <= 0 && e.deltaY < 0;
+      const atEnd = b.scrollTop + b.clientHeight >= b.scrollHeight - 1 && e.deltaY > 0;
+      if (atTop || atEnd) e.preventDefault();
+    };
+    let startY = 0;
+    const onStart = (e) => { if (e.touches && e.touches[0]) startY = e.touches[0].clientY; };
+    const onMove = (e) => {
+      const b = bodyRef.current;
+      if (!b || !b.contains(e.target) || b.scrollHeight <= b.clientHeight + 1) {
+        if (!(e.target.closest && e.target.closest("input,textarea"))) e.preventDefault();
+        return;
+      }
+      const dy = e.touches && e.touches[0] ? e.touches[0].clientY - startY : 0;
+      if ((b.scrollTop <= 0 && dy > 0) || (b.scrollTop + b.clientHeight >= b.scrollHeight - 1 && dy < 0)) e.preventDefault();
+    };
+    ov.addEventListener("wheel", guard, { passive: false });
+    ov.addEventListener("touchstart", onStart, { passive: true });
+    ov.addEventListener("touchmove", onMove, { passive: false });
+    return () => {
+      ov.removeEventListener("wheel", guard);
+      ov.removeEventListener("touchstart", onStart);
+      ov.removeEventListener("touchmove", onMove);
+      openSheets = Math.max(0, openSheets - 1);
+      if (!openSheets) document.documentElement.classList.remove("sheet-open");
+    };
+  }, []);
+}
+function Sheet({ title, onClose, onBack, children, right }) {
+  const ovRef = useRef(null);
+  const bodyRef = useRef(null);
+  useSheetLock(ovRef, bodyRef);
+  useEffect(() => {
+    const k = (e) => e.key === "Escape" && onClose();
+    addEventListener("keydown", k);
+    return () => removeEventListener("keydown", k);
+  }, [onClose]);
+  return ReactDOM.createPortal(
+    <div className="ov" ref={ovRef} onClick={onClose}>
+      <div className="sheet" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={title}>
+        <div className="grab" />
+        <div className="shead">
+          {onBack ? (
+            <button className="gbtn sx" onClick={onBack} aria-label="Back"><ChevronLeft size={18} strokeWidth={2.6} /></button>
+          ) : (
+            <button className="gbtn sx" onClick={onClose} aria-label="Close"><XMark size={17} strokeWidth={2.6} /></button>
+          )}
+          <div className="stitle">{title}</div>
+          {right || <span style={{ width: 44, flexShrink: 0 }} />}
+        </div>
+        <div className="sbody" ref={bodyRef}>{children}</div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+function PopMenu({ items, onClose, style }) {
+  return (
+    <>
+      <div className="menu-ov" onClick={onClose} />
+      <div className="menu glass" style={style} role="menu">
+        {items.map((it) => (
+          <button key={it.label} className="mi" role="menuitem" onClick={() => { onClose(); it.onClick(); }}>
+            <span>{it.label}</span>
+            {it.Icon ? <it.Icon size={20} /> : null}
+          </button>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/* ---------- area picker ---------- */
+function AreaSheet({ value, onPick, onClose }) {
+  const [q, setQ] = useState("");
+  const list = AREAS.filter((a) => a.name.toLowerCase().includes(q.trim().toLowerCase()));
+  return (
+    <Sheet title="Your area" onClose={onClose}>
+      <div className="search" style={{ marginBottom: 12 }}>
+        <Search size={17} />
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search Greater Accra" aria-label="Search areas" />
+      </div>
+      <div className="sgroup">
+        {list.map((a) => (
+          <Item key={a.name} inset={16} onClick={() => onPick(a.name)}>
+            <RowBody sm title={a.name} right={a.name === value ? <Check size={20} color="var(--tint)" strokeWidth={2.4} /> : null} />
+          </Item>
+        ))}
+        {!list.length ? <div className="empty">No area by that name in this demo yet.</div> : null}
+      </div>
+      <div className="foot">The demo covers these Greater Accra areas. The real app will also take a GhanaPost GPS address.</div>
+    </Sheet>
+  );
+}
+
+/* ---------- Fix flow: what's wrong → where and when ---------- */
+function FixSheet({ start, area, onArea, onClose, onFind }) {
+  const [step, setStep] = useState(start && start.cat ? 2 : 1);
+  const [cat, setCat] = useState(start && start.cat ? start.cat : null);
+  const [urgency, setUrgency] = useState(start && start.cat && catOf(start.cat).danger ? "now" : "today");
+  const [note, setNote] = useState("");
+  const c = cat ? catOf(cat) : null;
+  if (step === 1) {
+    return (
+      <Sheet title="What's wrong?" onClose={onClose}>
+        <div className="catgrid">
+          {FIX.map((f) => (
+            <button key={f.id} className={"cat" + (cat === f.id ? " on" : "")} onClick={() => { setCat(f.id); if (f.danger) setUrgency("now"); setStep(2); }}>
+              <Sq Icon={f.Icon} color={f.color} size={34} />
+              <span>{f.label}</span>
+            </button>
+          ))}
+        </div>
+        <div className="foot" style={{ textAlign: "center", paddingTop: 14 }}>Planning new work instead? Use <b style={{ color: "var(--label)" }}>Start a project</b> to get quotes.</div>
+      </Sheet>
+    );
+  }
+  return (
+    <Sheet title={c.label} onClose={onClose} onBack={() => setStep(1)}>
+      {c.danger ? (
+        <div className="banner danger" style={{ marginBottom: 6 }}>
+          <Warn size={24} color="var(--red)" />
+          <div>
+            <div className="bt">Switch off at the main breaker now</div>
+            <div className="bs">Keep people away from the socket or fitting. If there is fire or smoke, leave the building and call the Fire Service on 192 or 112.</div>
+          </div>
+        </div>
+      ) : null}
+      <div className="slab">Where</div>
+      <div className="sgroup">
+        <Item inset={16} onClick={onArea}>
+          <RowBody sm lead={<Pin size={20} color="var(--tint)" />} title={area} chevron />
+        </Item>
+      </div>
+      <div className="slab">How soon</div>
+      <Seg label="How soon" options={URGENCY} value={urgency} onChange={setUrgency} />
+      <div className="slab">Describe it (optional)</div>
+      <textarea className="ta" value={note} onChange={(e) => setNote(e.target.value)} maxLength={280}
+        placeholder={"e.g. " + (c.id === "tripping" ? "It trips when the AC and the iron are on together" : "When it started and what you have tried")} aria-label="Describe the problem" />
+      <div style={{ height: 18 }} />
+      <Btn label="Find electricians" onClick={() => onFind({ cat, urgency, note: note.trim() })} />
+    </Sheet>
+  );
+}
+
+/* ---------- Build flow: project type → details ---------- */
+function BuildSheet({ area, onArea, onClose, onPost }) {
+  const [step, setStep] = useState(1);
+  const [cat, setCat] = useState(null);
+  const [building, setBuilding] = useState("House");
+  const [rooms, setRooms] = useState(3);
+  const [timeline, setTimeline] = useState("month");
+  const [note, setNote] = useState("");
+  if (step === 1) {
+    return (
+      <Sheet title="Start a project" onClose={onClose}>
+        <div className="catgrid">
+          {BUILD.map((b) => (
+            <button key={b.id} className="cat" onClick={() => { setCat(b.id); setStep(2); }}>
+              <Sq Icon={b.Icon} color={b.color} size={34} />
+              <span>{b.label}</span>
+            </button>
+          ))}
+        </div>
+        <div className="foot" style={{ textAlign: "center", paddingTop: 14 }}>Up to 3 verified professionals will send you a quote to compare.</div>
+      </Sheet>
+    );
+  }
+  const c = catOf(cat);
+  return (
+    <Sheet title={c.label} onClose={onClose} onBack={() => setStep(1)}>
+      <div className="slab">Building</div>
+      <Seg label="Building" options={BUILDINGS.map((b) => ({ id: b, label: b }))} value={building} onChange={setBuilding} />
+      <div className="sgroup" style={{ marginTop: 12 }}>
+        <div className="li vrow sm" style={{ "--inset": "16px" }}>
+          <div className="tx" style={{ fontSize: 17 }}>{building === "Shop" || building === "Office" ? "Rooms" : "Bedrooms"}</div>
+          <div className="stepper">
+            <button onClick={() => setRooms(Math.max(1, rooms - 1))} disabled={rooms <= 1} aria-label="Fewer rooms"><Minus size={17} strokeWidth={2.4} /></button>
+            <b>{rooms}</b>
+            <button onClick={() => setRooms(Math.min(12, rooms + 1))} disabled={rooms >= 12} aria-label="More rooms"><Plus size={17} strokeWidth={2.4} /></button>
+          </div>
+        </div>
+        <Item inset={16} onClick={onArea}>
+          <RowBody sm lead={<Pin size={20} color="var(--tint)" />} title={area} chevron />
+        </Item>
+      </div>
+      <div className="slab">When</div>
+      <div className="sgroup">
+        {TIMELINE.map((t) => (
+          <Item key={t.id} inset={16} onClick={() => setTimeline(t.id)}>
+            <RowBody sm title={t.label} right={timeline === t.id ? <Check size={20} color="var(--tint)" strokeWidth={2.4} /> : null} />
+          </Item>
+        ))}
+      </div>
+      <div className="slab">Details (optional)</div>
+      <textarea className="ta" value={note} onChange={(e) => setNote(e.target.value)} maxLength={400}
+        placeholder="Stage of the building, drawings you have, anything special" aria-label="Project details" />
+      <div style={{ height: 18 }} />
+      <Btn label="Post project" onClick={() => onPost({ cat, building, rooms, timeline, note: note.trim() })} />
+      <div className="foot" style={{ textAlign: "center" }}>Only verified professionals who do this work will see it.</div>
+    </Sheet>
+  );
+}
+
+/* ---------- confirm a repair request ---------- */
+function RequestSheet({ pro, query, area, onClose, onSend }) {
+  const c = catOf(query.cat);
+  const u = URGENCY.find((x) => x.id === query.urgency) || URGENCY[1];
+  return (
+    <Sheet title="Send request" onClose={onClose}>
+      <div className="sgroup">
+        <div className="li"><RowBody lead={<Mono name={pro.name} size={44} />} title={pro.name} verified sub={pro.level + " · " + replyText(pro.reply).toLowerCase()} /></div>
+      </div>
+      <div className="slab">Your request</div>
+      <div className="sgroup">
+        <KV k="Problem" v={c.label} />
+        <KV k="Where" v={area} />
+        <KV k="When" v={u.long} color={query.urgency === "now" ? "var(--red)" : undefined} />
+        {query.note ? <div className="li" style={{ padding: "10px 16px 12px", fontSize: 15, color: "var(--sec)", lineHeight: 1.4 }}>“{query.note}”</div> : null}
+      </div>
+      <div className="note" style={{ marginTop: 14 }}>
+        <InfoCircle size={20} color="var(--tint)" />
+        <div>When {firstName(pro.name)} accepts, you can call or WhatsApp each other. You agree the price together and pay {firstName(pro.name)} directly.</div>
+      </div>
+      <div style={{ height: 18 }} />
+      <Btn label={"Send to " + firstName(pro.name)} onClick={onSend} />
+    </Sheet>
+  );
+}
+
+/* ---------- review after a job ---------- */
+const TAGS = ["On time", "Clean work", "Fair price", "Explained clearly", "Safe"];
+function ReviewSheet({ pro, onClose, onSave }) {
+  const [stars, setStars] = useState(0);
+  const [tags, setTags] = useState([]);
+  const [text, setText] = useState("");
+  return (
+    <Sheet title={"Rate " + firstName(pro.name)} onClose={onClose}>
+      <div style={{ display: "flex", justifyContent: "center", padding: "6px 0 2px" }}>
+        <Mono name={pro.name} size={64} />
+      </div>
+      <div className="stars" style={{ marginTop: 10 }} role="radiogroup" aria-label="Stars">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <button key={n} className={n <= stars ? "on" : ""} onClick={() => setStars(n)} role="radio" aria-checked={n === stars} aria-label={n + " stars"}>
+            {n <= stars ? <StarFill size={34} /> : <Star size={34} />}
+          </button>
+        ))}
+      </div>
+      <div className="chips" style={{ justifyContent: "center", marginTop: 16 }}>
+        {TAGS.map((t) => (
+          <button key={t} className={"chip" + (tags.includes(t) ? " on" : "")} onClick={() => setTags(tags.includes(t) ? tags.filter((x) => x !== t) : [...tags, t])}>{t}</button>
+        ))}
+      </div>
+      <div style={{ height: 16 }} />
+      <textarea className="ta" value={text} onChange={(e) => setText(e.target.value)} maxLength={300} placeholder="Anything others should know (optional)" aria-label="Review" />
+      <div style={{ height: 18 }} />
+      <Btn label="Save review" disabled={!stars} onClick={() => onSave({ stars, tags, text: text.trim() })} />
+      <div className="foot" style={{ textAlign: "center" }}>Only customers with a real request can review, so ratings can be trusted.</div>
+    </Sheet>
+  );
+}
+
+/* ---------- professional: send a quote ---------- */
+function QuoteSheet({ brief, onClose, onSend }) {
+  const [amt, setAmt] = useState("");
+  const [materials, setMaterials] = useState("yes");
+  const [days, setDays] = useState(brief.cat === "newbuild" ? 20 : 5);
+  const [step, setStep] = useState(1);
+  const [note, setNote] = useState("");
+  const press = (k) => {
+    if (k === "del") return setAmt(amt.slice(0, -1));
+    if (amt.length >= 7) return;
+    if (k === "0" && !amt) return;
+    setAmt(amt + k);
+  };
+  const v = Number(amt || 0);
+  if (step === 1) {
+    return (
+      <Sheet title="Your price" onClose={onClose}>
+        <div className="bigamt" style={{ fontSize: v >= 100000 ? 50 : 58, color: v ? "var(--label)" : "var(--ter)" }}><small>GH₵</small>{v ? money(v) : "0"}</div>
+        <div style={{ textAlign: "center", fontSize: 15, color: "var(--sec)", marginTop: 6 }}>{catOf(brief.cat).label} · {brief.rooms} {brief.building === "Shop" || brief.building === "Office" ? "rooms" : "bedrooms"} · {brief.area}</div>
+        <div className="keypad" style={{ marginTop: 10 }}>
+          {["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", "del"].map((k, i) =>
+            k === "" ? <span key={i} /> : (
+              <button key={i} className="kkey" onClick={() => press(k)} aria-label={k === "del" ? "Delete" : k}>
+                {k === "del" ? <DeleteLeft size={26} /> : k}
+              </button>
+            )
+          )}
+        </div>
+        <div style={{ height: 10 }} />
+        <Btn label="Next" disabled={!v} onClick={() => setStep(2)} />
+      </Sheet>
+    );
+  }
+  return (
+    <Sheet title="Quote details" onClose={onClose} onBack={() => setStep(1)}>
+      <div className="bigamt" style={{ fontSize: 40, marginTop: 0 }}><small style={{ fontSize: 20, top: 4 }}>GH₵</small>{money(v)}</div>
+      <div className="slab">Price includes</div>
+      <Seg label="Price includes" options={[{ id: "yes", label: "Labour + materials" }, { id: "no", label: "Labour only" }]} value={materials} onChange={setMaterials} />
+      <div className="sgroup" style={{ marginTop: 12 }}>
+        <div className="li vrow sm" style={{ "--inset": "16px" }}>
+          <div className="tx" style={{ fontSize: 17 }}>Days of work</div>
+          <div className="stepper">
+            <button onClick={() => setDays(Math.max(1, days - 1))} disabled={days <= 1} aria-label="Fewer days"><Minus size={17} strokeWidth={2.4} /></button>
+            <b>{days}</b>
+            <button onClick={() => setDays(Math.min(90, days + 1))} aria-label="More days"><Plus size={17} strokeWidth={2.4} /></button>
+          </div>
+        </div>
+      </div>
+      <div className="slab">Message to the customer</div>
+      <textarea className="ta" value={note} onChange={(e) => setNote(e.target.value)} maxLength={300} placeholder="What the price covers, payment stages, when you can start" aria-label="Message" />
+      <div style={{ height: 18 }} />
+      <Btn label="Send quote" onClick={() => onSend({ amount: v, materials: materials === "yes", days, note: note.trim() })} />
+    </Sheet>
+  );
+}
+
+/* ---------- welcome ---------- */
+function Welcome({ onClose }) {
+  return (
+    <Sheet title="" onClose={onClose}>
+      <div className="appicon" style={{ width: 84, height: 84, borderRadius: 19, marginTop: 4 }}><Bolt size={44} color="#fff" strokeWidth={2} /></div>
+      <div style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-.03em", textAlign: "center", marginTop: 16 }}>Find Engineers</div>
+      <div style={{ fontSize: 15, color: "var(--sec)", textAlign: "center", marginTop: 4 }}>Verified electricians and electrical engineers in Accra.</div>
+      <div className="feats">
+        <div className="feat"><ShieldCheck size={30} /><div><b>Checked credentials</b><span>Energy Commission certificates and Engineering Council registration, checked by hand.</span></div></div>
+        <div className="feat"><Bolt size={30} /><div><b>Fix it today</b><span>Pick the fault, see who is near and available, send a request.</span></div></div>
+        <div className="feat"><DocText size={30} /><div><b>Quotes for projects</b><span>New wiring, rewiring, solar: compare up to three quotes.</span></div></div>
+      </div>
+      <div className="note" style={{ marginTop: 26 }}>
+        <InfoCircle size={20} color="var(--tint)" />
+        <div><b>This is a demo.</b> Every person, rating and price is sample data. Nothing you send leaves this phone.</div>
+      </div>
+      <div style={{ height: 18 }} />
+      <Btn label="Try the demo" onClick={onClose} />
+    </Sheet>
+  );
+}
+
+/* one professional in a list */
+function ProRow({ p, onClick, query }) {
+  const sub = [p.level === "Electrical Engineer" ? "Engineer" : "Electrician", p.km != null ? kmText(p.km) : p.base].join(" · ");
+  return (
+    <Item onClick={onClick} inset={76}>
+      <div className="vrow" style={{ minHeight: 84 }}>
+        <Mono name={p.name} size={48} />
+        <div className="tx">
+          <div className="tt"><span>{p.name}</span><Verified size={16} /></div>
+          <div className="st">{sub}</div>
+          <div className="st2">
+            <Rating p={p} small />
+            {p.available
+              ? <span style={{ color: "var(--green-t)", fontWeight: 600 }}>· Available now</span>
+              : <span className="truncate">· {replyText(p.reply)}</span>}
+          </div>
+        </div>
+        <span className="chev"><ChevronRight size={15} strokeWidth={2.6} /></span>
+      </div>
+    </Item>
+  );
+}
+
+/* ============================================================ */
+function App() {
+  const [st, setSt] = useState(load);
+  const [tab, setTab] = useState("home");
+  const [stack, setStack] = useState([]); /* pushed pages */
+  const [sheet, setSheet] = useState(null);
+  const [areaFor, setAreaFor] = useState(null); /* area picker on top of a sheet */
+  const [menu, setMenu] = useState(null);
+  const [toastMsg, setToastMsg] = useState(null);
+  const [done, setDone] = useState(null);
+  const [now, setNow] = useState(Date.now());
+  /* screen state (search text, filters, ticks) lives here so the
+     once-a-second demo clock never resets it */
+  const [ui, setUi] = useState({ q: "", kind: "all", fcat: null, fnow: false, reqView: "active", checks: {} });
+  const setU = (patch) => setUi((u) => ({ ...u, ...patch }));
+  const scrollRef = useRef(null);
+  const stRef = useRef(st);
+  stRef.current = st;
+
+  /* every change is saved; the HUD only shows after a successful save */
+  const commit = (fn, okMsg) => {
+    const next = fn(stRef.current);
+    stRef.current = next;
+    setSt(next);
+    const ok = save(next);
+    if (okMsg) {
+      if (ok) setDone({ key: uid(), msg: okMsg });
+      else toast("Not saved on this phone. Please try again.");
+    }
+    return ok;
+  };
+  const toast = (m) => setToastMsg({ m, k: uid() });
+  useEffect(() => {
+    if (!toastMsg) return;
+    const t = setTimeout(() => setToastMsg(null), 2600);
+    return () => clearTimeout(t);
+  }, [toastMsg]);
+  useEffect(() => {
+    if (!done) return;
+    const t = setTimeout(() => setDone(null), 1350);
+    return () => clearTimeout(t);
+  }, [done]);
+  useEffect(() => { document.documentElement.dataset.accent = st.accent || "indigo"; }, [st.accent]);
+  useEffect(() => {
+    const p = new URLSearchParams(location.search).get("accent");
+    if (p && ["indigo", "sea", "teal", "violet"].includes(p)) document.documentElement.dataset.accent = p;
+  }, []);
+  useEffect(() => { if (!st.seenWelcome) setSheet({ type: "welcome" }); }, []);
+
+  /* the demo "network": professionals accept after a few seconds,
+     project quotes arrive one by one */
+  useEffect(() => {
+    const t = setInterval(() => {
+      const s = stRef.current, n = Date.now();
+      let changed = false, msg = null;
+      const requests = s.requests.map((r) => {
+        if (r.status === "sent" && n - r.sentAt > 5000) {
+          changed = true;
+          msg = firstName(proById(r.proId, s).name) + " accepted your request";
+          return { ...r, status: "accepted", acceptedAt: n };
+        }
+        return r;
+      });
+      const projects = s.projects.map((p) => {
+        if (p.status !== "open" || p.quotes.length >= 3) return p;
+        const due = Math.floor((n - p.postedAt) / 4000);
+        if (due > p.quotes.length && p.candidates[p.quotes.length]) {
+          changed = true;
+          const i = p.quotes.length, shape = QUOTE_SHAPES[i], pro = proById(p.candidates[i], s);
+          msg = "New quote from " + firstName(pro.name);
+          const base = sampleQuote(p.cat, p.rooms);
+          return { ...p, quotes: [...p.quotes, { proId: pro.id, amount: Math.round((base * shape.k) / 50) * 50, materials: shape.materials, days: shape.days(p.cat), note: shape.note, at: n }] };
+        }
+        return p;
+      });
+      if (changed) {
+        commit((x) => ({ ...x, requests, projects }));
+        if (msg) toast(msg);
+      }
+      setNow(n);
+    }, 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  const allPros = useMemo(() => [...SAMPLE_PROS, ...SAMPLE_APPLICANTS.filter((a) => st.approved.includes(a.id))], [st.approved]);
+  function proById(id, s = st) {
+    return SAMPLE_PROS.find((p) => p.id === id) || SAMPLE_APPLICANTS.find((p) => p.id === id) || SAMPLE_PROS[0];
+  }
+
+  const page = stack[stack.length - 1] || null;
+  const push = (p) => { setStack([...stack, p]); setMenu(null); };
+  const pop = () => setStack(stack.slice(0, -1));
+  const goTab = (t) => { setTab(t); setStack([]); setMenu(null); };
+  useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = 0; }, [tab, stack.length]);
+
+  const setArea = (a) => { commit((s) => ({ ...s, area: a })); setAreaFor(null); };
+  const openFix = (cat) => setSheet({ type: "fix", cat });
+  const openBuild = () => setSheet({ type: "build" });
+
+  const isPro = st.mode === "pro";
+  const pendingApplicants = SAMPLE_APPLICANTS.filter((a) => !st.approved.includes(a.id) && !st.rejected.includes(a.id)).length;
+  const inboxOpen = SAMPLE_INBOX.filter((i) => !st.pro.accepted.includes(i.id) && !st.pro.declined.includes(i.id));
+
+  /* ---------------- actions ---------------- */
+  const sendRequest = (pro, query) => {
+    const r = { id: uid(), kind: "fix", cat: query.cat, urgency: query.urgency, note: query.note, area: st.area, proId: pro.id, status: "sent", sentAt: Date.now() };
+    const ok = commit((s) => ({ ...s, requests: [r, ...s.requests] }), "Request sent to " + firstName(pro.name));
+    if (ok) { setSheet(null); setTab("requests"); setStack([{ type: "request", id: r.id }]); }
+  };
+  const postProject = (d) => {
+    const cands = matchPros(allPros, { cat: d.cat, area: st.area }).slice(0, 3).map((p) => p.id);
+    const p = { id: uid(), kind: "build", ...d, area: st.area, postedAt: Date.now(), quotes: [], candidates: cands, status: "open" };
+    const ok = commit((s) => ({ ...s, projects: [p, ...s.projects] }), "Project posted");
+    if (ok) { setSheet(null); setTab("requests"); setStack([{ type: "project", id: p.id }]); }
+  };
+
+  /* ---------------- pages ---------------- */
+  function NavBar({ title, right }) {
+    return (
+      <div className="navrow">
+        <button className="gbtn glass" onClick={pop} aria-label="Back"><ChevronLeft size={21} strokeWidth={2.4} /></button>
+        <div className="navtitle">{title || ""}</div>
+        {right || <span style={{ width: 44 }} />}
+      </div>
+    );
+  }
+
+  function ResultsPage({ query }) {
+    const onlyNow = page.onlyNow != null ? page.onlyNow : query.urgency === "now";
+    const setOnlyNow = (v) => setStack((s) => [...s.slice(0, -1), { ...s[s.length - 1], onlyNow: v }]);
+    const list = matchPros(allPros, { cat: query.cat, area: st.area });
+    const now_ = list.filter((p) => p.available);
+    const later = list.filter((p) => !p.available);
+    const c = catOf(query.cat);
+    return (
+      <>
+        {NavBar({ title: c.label })}
+        <div className="px">
+          {query.urgency === "now" || c.danger ? (
+            <div className="banner danger" style={{ marginTop: 6 }}>
+              <Warn size={24} color="var(--red)" />
+              <div>
+                <div className="bt">While you wait</div>
+                <div className="bs">Keep the power off at the main breaker and don't touch the fault. Fire or smoke: leave and call 192 or 112.</div>
+              </div>
+            </div>
+          ) : null}
+          <div style={{ fontSize: 15, color: "var(--sec)", padding: "16px 4px 0" }}>
+            {list.length} verified {list.length === 1 ? "professional" : "professionals"} for {c.label.toLowerCase()} near <b style={{ color: "var(--label)" }}>{st.area}</b>
+          </div>
+          <div className="chips" style={{ marginTop: 12 }}>
+            <button className={"chip" + (!onlyNow ? " on" : "")} onClick={() => setOnlyNow(false)}>All</button>
+            <button className={"chip" + (onlyNow ? " on" : "")} onClick={() => setOnlyNow(true)}><span className="live" style={{ width: 7, height: 7, boxShadow: "none" }} />Available now</button>
+          </div>
+          {now_.length ? <div className="caps">Available now</div> : null}
+          {now_.length ? <div className="group">{now_.map((p) => <ProRow key={p.id} p={p} onClick={() => push({ type: "pro", id: p.id, query })} />)}</div> : null}
+          {!onlyNow && later.length ? <div className="caps">{query.urgency === "now" ? "Not available right now" : "Reply later today"}</div> : null}
+          {!onlyNow && later.length ? <div className="group">{later.map((p) => <ProRow key={p.id} p={p} onClick={() => push({ type: "pro", id: p.id, query })} />)}</div> : null}
+          {!list.length || (onlyNow && !now_.length) ? (
+            <div className="card empty" style={{ marginTop: 16 }}>
+              No verified professional {onlyNow ? "is available right now " : ""}for this near {st.area} in the demo.
+              <div style={{ marginTop: 12 }}><Btn small kind="ghost" label="Change area" onClick={() => setAreaFor("page")} /></div>
+            </div>
+          ) : null}
+          <div className="foot">Sorted by who is available, then rating, then how fast they reply. Only professionals whose credentials we checked are shown.</div>
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+
+  function ProPage({ id, query, preview }) {
+    const p = proById(id);
+    const km = kmBetween(p.base, st.area);
+    const svc = CATS.filter((c) => p.cats.includes(c.id));
+    const doRequest = () => {
+      if (query) setSheet({ type: "request", pro: p, query });
+      else setSheet({ type: "fix", cat: null, proId: p.id });
+    };
+    return (
+      <div className="ppage">
+        <div className="poster" />
+        <div style={{ position: "relative" }}>
+          {NavBar({})}
+          <div className="px">
+            <div className="bigmono">{initials(p.name)}</div>
+            <div className="pname">{p.name}<Verified size={22} /></div>
+            <div className="plevel">{p.level} · {p.years} years · {p.base}</div>
+            <div className="creds">
+              <span className="cred"><IdCard size={16} />ID checked</span>
+              {p.ec ? <span className="cred"><ShieldCheck size={16} />EC Certified · {p.ec}</span> : null}
+              {p.eng ? <span className="cred"><Compass size={16} />Registered Engineer</span> : null}
+            </div>
+            <div className="acts">
+              <button onClick={doRequest} disabled={preview}><Bolt size={22} />Request</button>
+              <button onClick={() => toast("Call opens after " + firstName(p.name) + " accepts")} disabled={preview}><Phone size={22} />Call</button>
+              <button onClick={() => toast("WhatsApp opens after " + firstName(p.name) + " accepts")} disabled={preview}><Chat size={22} />WhatsApp</button>
+            </div>
+            <div className="tiles">
+              <div className="tile"><div className="v">{p.reviews ? p.rating.toFixed(1) : "—"}</div><div className="u">{p.reviews ? p.reviews + " reviews" : "No reviews"}</div></div>
+              <div className="tile"><div className="v">{p.jobs}</div><div className="u">Jobs done</div></div>
+              <div className="tile"><div className="v">{p.reply < 60 ? p.reply + "m" : "1h"}</div><div className="u">Replies in</div></div>
+              <div className="tile"><div className="v">{km < 1 ? "<1" : Math.round(km)}<span style={{ fontSize: 13, color: "var(--sec)", fontWeight: 600 }}> km</span></div><div className="u">From you</div></div>
+            </div>
+            {p.available ? (
+              <div className="note" style={{ marginTop: 12, background: "color-mix(in srgb,var(--green) 13%,transparent)" }}>
+                <span className="live" style={{ marginTop: 5 }} />
+                <div><b>Available now</b> for urgent jobs around {p.base}.</div>
+              </div>
+            ) : null}
+            <div className="caps">About</div>
+            <div className="card" style={{ padding: "14px 16px", fontSize: 16, lineHeight: 1.45, letterSpacing: "-.015em" }}>{p.bio}</div>
+            <div className="caps">Services</div>
+            <div className="group">
+              {svc.map((c) => (
+                <div className="li" key={c.id} style={{ "--inset": "60px" }}><RowBody sm lead={<Sq Icon={c.Icon} color={c.color} size={30} />} title={c.label} /></div>
+              ))}
+            </div>
+            <div className="caps">Areas served</div>
+            <div className="chips">{p.areas.map((a) => <span key={a} className={"chip static" + (a === st.area ? " on" : "")}>{a}</span>)}</div>
+            <div className="caps">Credentials</div>
+            <div className="group">
+              <div className="li"><RowBody lead={<Sq Icon={IdCard} color="#8E8E93" size={34} />} title="Ghana Card" sub="Identity checked against a selfie" right={<Check size={20} color="var(--green-t)" strokeWidth={2.4} />} /></div>
+              {p.ec ? <div className="li"><RowBody lead={<Sq Icon={ShieldCheck} color="var(--tint-fill)" size={34} />} title={"Energy Commission · " + p.ec} sub="Wiring certificate found in the EC register" right={<Check size={20} color="var(--green-t)" strokeWidth={2.4} />} /></div> : null}
+              {p.eng ? <div className="li"><RowBody lead={<Sq Icon={Compass} color="#AF52DE" size={34} />} title="Engineering Council" sub="Registration checked" right={<Check size={20} color="var(--green-t)" strokeWidth={2.4} />} /></div> : null}
+            </div>
+            <div className="foot">Sample profile for the demo. In the real app each check shows the date it was done.</div>
+            {p.said && p.said.length ? (
+              <>
+                <div className="caps">Reviews</div>
+                <div className="group">
+                  {p.said.map(([t, w], i) => (
+                    <div className="li review" key={i} style={{ "--inset": "16px" }}>
+                      <div style={{ display: "flex", gap: 2, color: "#FF9F0A" }}>{[1, 2, 3, 4, 5].map((n) => <StarFill key={n} size={13} />)}</div>
+                      <p>{t}</p>
+                      <div className="who">{w}</div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : null}
+          </div>
+          {!preview ? <div className="px" style={{ marginTop: 22 }}><Btn label={"Request " + firstName(p.name)} onClick={doRequest} /></div> : null}
+          <Spacer />
+        </div>
+      </div>
+    );
+  }
+
+  function RequestPage({ id }) {
+    const r = st.requests.find((x) => x.id === id);
+    if (!r) return <>{NavBar({})}<div className="empty">This request was removed.</div></>;
+    const p = proById(r.proId), c = catOf(r.cat);
+    const steps = [
+      { t: "Request sent", s: ago(r.sentAt), ok: true },
+      { t: r.status === "sent" ? "Waiting for " + firstName(p.name) : firstName(p.name) + " accepted", s: r.status === "sent" ? "Usually " + replyText(p.reply).toLowerCase().replace("replies ", "") : ago(r.acceptedAt), ok: r.status !== "sent", now: r.status === "sent" },
+      { t: "Job done", s: r.status === "done" ? ago(r.doneAt) : "Mark it done when the work is finished", ok: r.status === "done", now: r.status === "accepted" },
+    ];
+    const accepted = r.status !== "sent";
+    return (
+      <>
+        {NavBar({ title: c.label })}
+        <div className="px">
+          <div className="group" style={{ marginTop: 6 }}>
+            <Item onClick={() => push({ type: "pro", id: p.id, preview: true })} inset={72}>
+              <RowBody lead={<Mono name={p.name} size={46} />} title={p.name} verified sub={p.level} right={<StatusPill status={r.status} />} chevron />
+            </Item>
+          </div>
+          <div className="acts">
+            <button disabled={!accepted} onClick={() => toast("Demo: calls are switched off")}><Phone size={22} />Call</button>
+            <button disabled={!accepted} onClick={() => toast("Demo: WhatsApp is switched off")}><Chat size={22} />WhatsApp</button>
+            <button onClick={() => push({ type: "pro", id: p.id, preview: true })}><PersonCircle size={22} />Profile</button>
+          </div>
+          {!accepted ? <div className="foot" style={{ textAlign: "center" }}>Call and WhatsApp unlock when {firstName(p.name)} accepts. Your number stays private until then.</div> : null}
+          <div className="caps">Progress</div>
+          <div className="card tl">
+            {steps.map((x, i) => (
+              <div key={i} className={"tls" + (x.ok ? " ok" : x.now ? " now" : "")}>
+                <div className="d">{x.ok ? <Check size={14} strokeWidth={3} /> : x.now ? <Clock size={14} strokeWidth={2.6} /> : null}</div>
+                <div><b>{x.t}</b><span>{x.s}</span></div>
+              </div>
+            ))}
+          </div>
+          <div className="caps">Details</div>
+          <div className="group">
+            <KV k="Problem" v={c.label} />
+            <KV k="Where" v={r.area} />
+            <KV k="When" v={(URGENCY.find((u) => u.id === r.urgency) || URGENCY[1]).long} />
+            {r.note ? <div className="li" style={{ padding: "10px 16px 12px", fontSize: 15, color: "var(--sec)", lineHeight: 1.4 }}>“{r.note}”</div> : null}
+          </div>
+          {r.review ? (
+            <>
+              <div className="caps">Your review</div>
+              <div className="card review">
+                <div style={{ display: "flex", gap: 2, color: "#FF9F0A" }}>{[1, 2, 3, 4, 5].map((n) => (n <= r.review.stars ? <StarFill key={n} size={15} /> : <Star key={n} size={15} />))}</div>
+                {r.review.tags.length ? <div className="who">{r.review.tags.join(" · ")}</div> : null}
+                {r.review.text ? <p>{r.review.text}</p> : null}
+              </div>
+            </>
+          ) : null}
+          <div style={{ height: 18 }} />
+          {r.status === "accepted" ? (
+            <Btn label="Job is done" kind="green" onClick={() => commit((s) => ({ ...s, requests: s.requests.map((x) => (x.id === r.id ? { ...x, status: "done", doneAt: Date.now() } : x)) }), "Marked as done")} />
+          ) : null}
+          {r.status === "done" && !r.review ? <Btn label={"Rate " + firstName(p.name)} onClick={() => setSheet({ type: "review", req: r })} /> : null}
+          {r.status === "sent" ? <Btn label="Cancel request" kind="danger" onClick={() => { commit((s) => ({ ...s, requests: s.requests.filter((x) => x.id !== r.id) })); pop(); toast("Request cancelled"); }} /> : null}
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+
+  function ProjectPage({ id }) {
+    const pj = st.projects.find((x) => x.id === id);
+    if (!pj) return <>{NavBar({})}<div className="empty">This project was removed.</div></>;
+    const c = catOf(pj.cat);
+    const prices = pj.quotes.map((q) => q.amount);
+    const low = Math.min(...prices);
+    const bestRated = pj.quotes.length ? pj.quotes.map((q) => proById(q.proId)).sort((a, b) => b.rating - a.rating)[0].id : null;
+    const waiting = pj.status === "open" && pj.quotes.length < Math.min(3, pj.candidates.length);
+    return (
+      <>
+        {NavBar({ title: c.label })}
+        <div className="px">
+          <div className="card" style={{ padding: "14px 16px", marginTop: 6, display: "flex", gap: 12, alignItems: "center" }}>
+            <Sq Icon={c.Icon} color={c.color} size={44} />
+            <div className="tx">
+              <div style={{ fontSize: 17, fontWeight: 600, letterSpacing: "-.022em" }}>{pj.building} · {pj.rooms} {pj.building === "Shop" || pj.building === "Office" ? "rooms" : "bedrooms"}</div>
+              <div style={{ fontSize: 15, color: "var(--sec)", marginTop: 1 }}>{pj.area} · {(TIMELINE.find((t) => t.id === pj.timeline) || TIMELINE[1]).label}</div>
+              <div style={{ marginTop: 8 }}><StatusPill status={pj.status} /></div>
+            </div>
+          </div>
+          {pj.note ? <div className="foot" style={{ padding: "10px 4px 0", fontSize: 15 }}>“{pj.note}”</div> : null}
+          <Head title={pj.status === "hired" ? "Quotes" : "Compare quotes"} />
+          {pj.quotes.map((q, i) => {
+            const p = proById(q.proId);
+            const hired = pj.hiredProId === p.id;
+            return (
+              <div className="qcard" key={i} style={hired ? { boxShadow: "inset 0 0 0 2px var(--green)" } : undefined}>
+                <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                  <Mono name={p.name} size={40} />
+                  <div className="tx">
+                    <div className="tt"><span>{p.name}</span><Verified size={15} /></div>
+                    <div className="st" style={{ display: "flex", gap: 8 }}><Rating p={p} small />{p.level === "Electrical Engineer" ? "Engineer" : "Electrician"}</div>
+                  </div>
+                  <button className="link" style={{ fontSize: 15 }} onClick={() => push({ type: "pro", id: p.id, preview: true })}>Profile</button>
+                </div>
+                <div className="qprice"><small>GH₵</small>{money(q.amount)}</div>
+                <div className="qmeta">{q.materials ? "Labour + materials" : "Labour only — you buy materials"} · {q.days} {q.days === 1 ? "day" : "days"}</div>
+                <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
+                  {pj.quotes.length > 1 && q.amount === low ? <span className="pill green">Lowest price</span> : null}
+                  {pj.quotes.length > 1 && p.id === bestRated ? <span className="pill tint">Highest rated</span> : null}
+                  <span className="pill grey">Sample quote</span>
+                </div>
+                <div className="qnote">{q.note}</div>
+                {pj.status === "open" ? (
+                  <div style={{ marginTop: 14 }}><Btn small label={"Choose " + firstName(p.name)} onClick={() => setSheet({ type: "hire", pj, q })} /></div>
+                ) : hired ? (
+                  <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 6, color: "var(--green-t)", fontWeight: 600 }}><Check size={18} strokeWidth={2.6} />You chose {firstName(p.name)}</div>
+                ) : null}
+              </div>
+            );
+          })}
+          {waiting ? (
+            <div className="card empty" style={{ marginTop: pj.quotes.length ? 12 : 0 }}>
+              <Clock size={26} color="var(--tint)" style={{ margin: "0 auto 8px" }} />
+              Waiting for {Math.min(3, pj.candidates.length) - pj.quotes.length} more {Math.min(3, pj.candidates.length) - pj.quotes.length === 1 ? "quote" : "quotes"}.
+              <div style={{ fontSize: 13, marginTop: 4 }}>In the demo they arrive within a few seconds.</div>
+            </div>
+          ) : null}
+          {!pj.candidates.length ? <div className="card empty">No verified professional does this work near {pj.area} in the demo yet.</div> : null}
+          <div className="foot">Compare what each price includes, not only the total. Labour-only quotes need you to buy materials.</div>
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+
+  /* ---------------- customer tabs ---------------- */
+  function Home() {
+    const nearAvail = matchPros(allPros.filter((p) => p.available), { cat: "nopower", area: st.area }).concat(
+      allPros.filter((p) => p.available && !p.cats.includes("nopower")).map((p) => ({ ...p, km: kmBetween(p.base, st.area) }))
+    );
+    const nearby = allPros.map((p) => ({ ...p, km: kmBetween(p.base, st.area) })).filter((p) => p.areas.includes(st.area) || p.km <= 12);
+    const availCount = nearby.filter((p) => p.available).length;
+    const engCount = nearby.filter((p) => p.eng).length;
+    const top = nearAvail.filter((p) => p.areas.includes(st.area) || p.km <= 12).slice(0, 3);
+    const active = st.requests.filter((r) => r.status !== "done").length + st.projects.filter((p) => p.status === "open").length;
+    const d = new Date(now);
+    return (
+      <>
+        <TitleBlock
+          eyebrow={d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}
+          title="Home"
+          right={<button className="avatar" onClick={() => setMenu("me")} aria-label="Account menu">YO</button>}
+        />
+        <div className="px">
+          <div className="hero">
+            <div className="htop">
+              <div className="hbrand"><Bolt size={20} color="#fff" strokeWidth={2.2} />Find Engineers</div>
+              <span className="demo">DEMO</span>
+            </div>
+            <div className="hl">Verified near</div>
+            <button className="harea" onClick={() => setAreaFor("home")} aria-label={"Area: " + st.area + ". Change"}>
+              <span>{st.area}</span><ChevronDown size={22} color="#fff" strokeWidth={2.6} />
+            </button>
+            <div className="hs"><span className="live" />{availCount} available now · {engCount} engineers nearby</div>
+          </div>
+          <div className="quick">
+            <button className="qa vs-press" onClick={() => openFix(null)}>
+              <Sq Icon={Bolt} color="var(--orange)" size={40} />
+              <div className="qt">Fix something</div>
+              <div className="qs">Repairs and faults</div>
+            </button>
+            <button className="qa vs-press" onClick={openBuild}>
+              <Sq Icon={HouseLine} color="var(--tint-fill)" size={40} />
+              <div className="qt">Start a project</div>
+              <div className="qs">Quotes for new work</div>
+            </button>
+          </div>
+          {active ? (
+            <div className="group" style={{ marginTop: 12 }}>
+              <Item onClick={() => goTab("requests")}>
+                <RowBody lead={<Sq Icon={TabReq} color="var(--tint-fill)" size={36} />} title={active + (active === 1 ? " active request" : " active requests")} sub="See progress and quotes" chevron />
+              </Item>
+            </div>
+          ) : null}
+          <Head title="Common problems" />
+          <div className="catgrid">
+            {FIX.slice(0, 6).map((f) => (
+              <button key={f.id} className="cat vs-press" onClick={() => openFix(f.id)}>
+                <Sq Icon={f.Icon} color={f.color} size={34} />
+                <span>{f.label}</span>
+              </button>
+            ))}
+          </div>
+          <Head title="Available now" action="See all" onAction={() => goTab("find")} />
+          {top.length ? (
+            <div className="group">{top.map((p) => <ProRow key={p.id} p={p} onClick={() => push({ type: "pro", id: p.id })} />)}</div>
+          ) : (
+            <div className="card empty">Nobody is available near {st.area} right now in the demo. Try East Legon or Madina.</div>
+          )}
+          <div className="banner danger" style={{ marginTop: 22 }}>
+            <Warn size={24} color="var(--red)" />
+            <div>
+              <div className="bt">Sparks, smoke or a burning smell?</div>
+              <div className="bs">Switch off at the main breaker and keep away. If there is fire, leave the building and call 192 or 112.</div>
+            </div>
+          </div>
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+
+  function Find() {
+    const { q, kind, fcat: cat, fnow: onlyNow } = ui;
+    const setQ = (v) => setU({ q: v }), setKind = (v) => setU({ kind: v }), setCat = (v) => setU({ fcat: v }), setOnlyNow = (v) => setU({ fnow: v });
+    const t = q.trim().toLowerCase();
+    const list = allPros
+      .map((p) => ({ ...p, km: kmBetween(p.base, st.area) }))
+      .filter((p) => kind === "all" || (kind === "eng" ? p.eng : !p.eng))
+      .filter((p) => !cat || p.cats.includes(cat))
+      .filter((p) => !onlyNow || p.available)
+      .filter((p) => !t || p.name.toLowerCase().includes(t) || p.areas.some((a) => a.toLowerCase().includes(t)) || p.cats.some((c) => catOf(c).label.toLowerCase().includes(t)))
+      .sort((a, b) => a.km - b.km || b.rating - a.rating);
+    return (
+      <>
+        <TitleBlock title="Find" sub={"Verified professionals near " + st.area} />
+        <div className="px">
+          <div className="search"><Search size={17} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Name, area or service" aria-label="Search professionals" /></div>
+          <div style={{ height: 12 }} />
+          <Seg label="Kind" value={kind} onChange={setKind} options={[{ id: "all", label: "All" }, { id: "elec", label: "Electricians" }, { id: "eng", label: "Engineers" }]} />
+          <div className="chips scroll" style={{ marginTop: 12 }}>
+            <button className={"chip" + (onlyNow ? " on" : "")} onClick={() => setOnlyNow(!onlyNow)}><span className="live" style={{ width: 7, height: 7, boxShadow: "none" }} />Available now</button>
+            {CATS.map((c) => <button key={c.id} className={"chip" + (cat === c.id ? " on" : "")} onClick={() => setCat(cat === c.id ? null : c.id)}>{c.label}</button>)}
+          </div>
+          <div className="caps">{list.length} {list.length === 1 ? "result" : "results"} · nearest first</div>
+          {list.length ? <div className="group">{list.map((p) => <ProRow key={p.id} p={p} onClick={() => push({ type: "pro", id: p.id })} />)}</div> : <div className="card empty">No match. Try fewer filters.</div>}
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+
+  function Requests() {
+    const view = ui.reqView, setView = (v) => setU({ reqView: v });
+    const items = [
+      ...st.requests.map((r) => ({ ...r, t: r.sentAt })),
+      ...st.projects.map((p) => ({ ...p, t: p.postedAt })),
+    ].sort((a, b) => b.t - a.t);
+    const list = items.filter((x) => (view === "active" ? x.status !== "done" && x.status !== "hired" : x.status === "done" || x.status === "hired"));
+    return (
+      <>
+        <TitleBlock title="Requests" />
+        <div className="px">
+          <Seg label="Show" value={view} onChange={setView} options={[{ id: "active", label: "Active" }, { id: "past", label: "Finished" }]} />
+          <div style={{ height: 14 }} />
+          {list.length ? (
+            <div className="group">
+              {list.map((x) => {
+                const c = catOf(x.cat);
+                if (x.kind === "fix") {
+                  const p = proById(x.proId);
+                  return (
+                    <Item key={x.id} onClick={() => push({ type: "request", id: x.id })}>
+                      <RowBody lead={<Sq Icon={c.Icon} color={c.color} size={36} />} title={c.label} sub={p.name + " · " + ago(x.sentAt)} right={<StatusPill status={x.status} />} chevron />
+                    </Item>
+                  );
+                }
+                const sub = x.status === "hired" ? "Hired " + proById(x.hiredProId).name : x.quotes.length + " of " + Math.min(3, x.candidates.length) + " quotes in";
+                return (
+                  <Item key={x.id} onClick={() => push({ type: "project", id: x.id })}>
+                    <RowBody lead={<Sq Icon={c.Icon} color={c.color} size={36} />} title={c.label} sub={sub} right={<StatusPill status={x.status} />} chevron />
+                  </Item>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="card empty">
+              {view === "active" ? "No active requests. When something needs fixing or you're planning new work, start here." : "Finished jobs and hired projects appear here."}
+              {view === "active" ? (
+                <div className="btnrow" style={{ marginTop: 14 }}>
+                  <Btn small kind="ghost" label="Fix something" onClick={() => openFix(null)} />
+                  <Btn small kind="ghost" label="Start a project" onClick={openBuild} />
+                </div>
+              ) : null}
+            </div>
+          )}
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+
+  /* ---------------- professional tabs (you are Kwame) ---------------- */
+  const me = proById(ME_PRO);
+  function ProToday() {
+    const d = new Date(now);
+    return (
+      <>
+        <TitleBlock
+          eyebrow={d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}
+          title="Today"
+          right={<button className="avatar" style={{ background: "linear-gradient(180deg,color-mix(in srgb,var(--tint-fill) 55%,#fff),var(--tint-fill))" }} onClick={() => setMenu("me")} aria-label="Account menu">{initials(me.name)}</button>}
+        />
+        <div className="px">
+          <div className="hero">
+            <div className="htop">
+              <div className="hbrand"><Bolt size={20} color="#fff" strokeWidth={2.2} />{me.name}</div>
+              <span className="demo">DEMO</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 12, marginTop: 30 }}>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-.03em" }}>{st.pro.available ? "Available now" : "Not available"}</div>
+                <div className="hs">{st.pro.available ? <><span className="live" />Customers near you can send urgent jobs</> : "You only get planned jobs and projects"}</div>
+              </div>
+              <Switch on={st.pro.available} label="Available now" onChange={(v) => { commit((s) => ({ ...s, pro: { ...s.pro, available: v } })); toast(v ? "Urgent jobs on" : "Urgent jobs paused"); }} />
+            </div>
+          </div>
+          <div className="tiles" style={{ gridTemplateColumns: "repeat(3,1fr)" }}>
+            <div className="tile"><div className="v">{inboxOpen.length}</div><div className="u">New requests</div></div>
+            <div className="tile"><div className="v">{me.rating.toFixed(1)}</div><div className="u">Rating</div></div>
+            <div className="tile"><div className="v">{14 + st.pro.accepted.length}</div><div className="u">Jobs this month</div></div>
+          </div>
+          <Head title="New requests" action={inboxOpen.length ? "All" : null} onAction={() => goTab("jobs")} />
+          {inboxOpen.length ? <div className="group">{inboxOpen.slice(0, 3).map((i) => InboxRow({ i }))}</div> : <div className="card empty">No new requests. Keep "Available now" on to receive urgent jobs.</div>}
+          <Head title="Projects to quote" action="All" onAction={() => goTab("projects")} />
+          <div className="group">{SAMPLE_BRIEFS.map((b) => BriefRow({ b }))}</div>
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+  function InboxRow({ i }) {
+    const c = catOf(i.cat);
+    const u = URGENCY.find((x) => x.id === i.urgency);
+    return (
+      <Item key={i.id} onClick={() => push({ type: "inbox", id: i.id })}>
+        <RowBody wrap lead={<Sq Icon={c.Icon} color={c.color} size={36} />} title={c.label} sub={i.area + " · " + kmText(kmBetween(me.base, i.area))}
+          right={<span className={"pill " + (i.urgency === "now" ? "red" : i.urgency === "today" ? "orange" : "grey")}>{u.label}</span>} chevron />
+      </Item>
+    );
+  }
+  function BriefRow({ b }) {
+    const c = catOf(b.cat);
+    const sent = st.pro.quotes[b.id];
+    return (
+      <Item key={b.id} onClick={() => push({ type: "brief", id: b.id })}>
+        <RowBody lead={<Sq Icon={c.Icon} color={c.color} size={36} />} title={c.label} sub={b.building + " · " + b.rooms + " bed · " + b.area}
+          right={sent ? <span className="pill green">Quoted</span> : <span className="pill grey">{b.quotes} of 3</span>} chevron />
+      </Item>
+    );
+  }
+  function InboxPage({ id }) {
+    const i = SAMPLE_INBOX.find((x) => x.id === id);
+    const c = catOf(i.cat);
+    const accepted = st.pro.accepted.includes(i.id);
+    const declined = st.pro.declined.includes(i.id);
+    return (
+      <>
+        {NavBar({ title: c.label })}
+        <div className="px">
+          <div className="card" style={{ padding: 16, marginTop: 6 }}>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <Sq Icon={c.Icon} color={c.color} size={44} />
+              <div className="tx"><div className="tt"><span>{c.label}</span></div><div className="st">{i.who} · {i.mins} min ago</div></div>
+            </div>
+            <div style={{ fontSize: 16, lineHeight: 1.45, marginTop: 12 }}>“{i.note}”</div>
+          </div>
+          <div className="caps">Job</div>
+          <div className="group">
+            <KV k="Where" v={i.area} />
+            <KV k="Distance" v={kmText(kmBetween(me.base, i.area))} />
+            <KV k="When" v={URGENCY.find((x) => x.id === i.urgency).long} color={i.urgency === "now" ? "var(--red)" : undefined} />
+          </div>
+          {accepted ? (
+            <>
+              <div className="note" style={{ marginTop: 14, background: "color-mix(in srgb,var(--green) 13%,transparent)" }}>
+                <Check size={20} color="var(--green-t)" strokeWidth={2.6} />
+                <div><b>You accepted this job.</b> {i.who}'s number is now shared with you. Agree the price before you start.</div>
+              </div>
+              <div className="acts">
+                <button onClick={() => toast("Demo: calls are switched off")}><Phone size={22} />Call</button>
+                <button onClick={() => toast("Demo: WhatsApp is switched off")}><Chat size={22} />WhatsApp</button>
+              </div>
+            </>
+          ) : declined ? (
+            <div className="card empty" style={{ marginTop: 14 }}>You declined this request.</div>
+          ) : (
+            <>
+              <div className="foot">The customer's number is shared when you accept.</div>
+              <div style={{ height: 16 }} />
+              <div className="btnrow">
+                <Btn kind="quiet" label="Decline" onClick={() => { commit((s) => ({ ...s, pro: { ...s.pro, declined: [...s.pro.declined, i.id] } })); pop(); toast("Request declined"); }} />
+                <Btn kind="green" label="Accept" onClick={() => commit((s) => ({ ...s, pro: { ...s.pro, accepted: [...s.pro.accepted, i.id] } }), "Job accepted")} />
+              </div>
+            </>
+          )}
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+  function BriefPage({ id }) {
+    const b = SAMPLE_BRIEFS.find((x) => x.id === id);
+    const c = catOf(b.cat);
+    const sent = st.pro.quotes[b.id];
+    return (
+      <>
+        {NavBar({ title: c.label })}
+        <div className="px">
+          <div className="card" style={{ padding: 16, marginTop: 6 }}>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <Sq Icon={c.Icon} color={c.color} size={44} />
+              <div className="tx"><div className="tt"><span>{b.building} · {b.rooms} bedrooms</span></div><div className="st">Posted {b.posted}</div></div>
+            </div>
+            <div style={{ fontSize: 16, lineHeight: 1.45, marginTop: 12 }}>“{b.note}”</div>
+          </div>
+          <div className="caps">Project</div>
+          <div className="group">
+            <KV k="Where" v={b.area + " · " + kmText(kmBetween(me.base, b.area))} />
+            <KV k="When" v={TIMELINE.find((t) => t.id === b.timeline).label} />
+            <KV k="Quotes so far" v={(b.quotes + (sent ? 1 : 0)) + " of 3"} />
+          </div>
+          {sent ? (
+            <>
+              <div className="caps">Your quote</div>
+              <div className="qcard">
+                <div className="qprice" style={{ marginTop: 0 }}><small>GH₵</small>{money(sent.amount)}</div>
+                <div className="qmeta">{sent.materials ? "Labour + materials" : "Labour only"} · {sent.days} days</div>
+                {sent.note ? <div className="qnote">{sent.note}</div> : null}
+              </div>
+              <div className="foot">The customer compares up to three quotes and chooses one.</div>
+            </>
+          ) : (
+            <>
+              <div style={{ height: 18 }} />
+              <Btn label="Send a quote" onClick={() => setSheet({ type: "quote", brief: b })} />
+              <div className="foot" style={{ textAlign: "center" }}>Only three professionals can quote on each project.</div>
+            </>
+          )}
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+  function ProJobs() {
+    const accepted = SAMPLE_INBOX.filter((i) => st.pro.accepted.includes(i.id));
+    return (
+      <>
+        <TitleBlock title="Jobs" sub="Requests from customers" />
+        <div className="px">
+          <div className="caps" style={{ paddingTop: 4 }}>New</div>
+          {inboxOpen.length ? <div className="group">{inboxOpen.map((i) => InboxRow({ i }))}</div> : <div className="card empty">You're all caught up.</div>}
+          <div className="caps">Accepted</div>
+          {accepted.length ? <div className="group">{accepted.map((i) => InboxRow({ i }))}</div> : <div className="card empty">Jobs you accept appear here.</div>}
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+  function ProProjects() {
+    return (
+      <>
+        <TitleBlock title="Projects" sub="Open briefs you can quote on" />
+        <div className="px">
+          <div className="group">{SAMPLE_BRIEFS.map((b) => BriefRow({ b }))}</div>
+          <div className="foot">You see projects for services you offer, in areas you serve.</div>
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+  function ProProfile() {
+    return (
+      <>
+        <TitleBlock title="Profile" sub={me.level + " · " + me.base} />
+        <div className="px">
+          <div className="group">
+            <Item onClick={() => push({ type: "pro", id: me.id, preview: true })} inset={76}>
+              <RowBody lead={<Mono name={me.name} size={52} />} title={me.name} verified sub="See your public profile" chevron />
+            </Item>
+          </div>
+          <div className="caps">Verification</div>
+          <div className="group">
+            <div className="li"><RowBody lead={<Sq Icon={IdCard} color="#8E8E93" size={34} />} title="Ghana Card" sub="Checked" right={<span className="pill green">Verified</span>} /></div>
+            <div className="li"><RowBody lead={<Sq Icon={ShieldCheck} color="var(--tint-fill)" size={34} />} title="Energy Commission certificate" sub={"Domestic wiring"} right={<span className="pill green">Verified</span>} /></div>
+            <div className="li"><RowBody lead={<Sq Icon={Compass} color="#AF52DE" size={34} />} title="Engineering Council" sub="Only for engineers" right={<span className="pill grey">Not needed</span>} /></div>
+          </div>
+          <div className="foot">Customers only see professionals whose documents were checked. You get a badge for each one.</div>
+          <div className="caps">Services you offer</div>
+          <div className="chips">{CATS.filter((c) => me.cats.includes(c.id)).map((c) => <span key={c.id} className="chip static on">{c.label}</span>)}</div>
+          <div className="caps">Areas you serve</div>
+          <div className="chips">{me.areas.map((a) => <span key={a} className="chip static">{a}</span>)}</div>
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+
+  /* ---------------- admin ---------------- */
+  function AdminPage() {
+    const pending = SAMPLE_APPLICANTS.filter((a) => !st.approved.includes(a.id) && !st.rejected.includes(a.id));
+    const decided = SAMPLE_APPLICANTS.filter((a) => st.approved.includes(a.id) || st.rejected.includes(a.id));
+    return (
+      <>
+        {NavBar({ title: "Verification" })}
+        <div className="px">
+          <div className="note" style={{ marginTop: 6 }}>
+            <ShieldCheck size={20} color="var(--tint)" />
+            <div>Nobody can receive requests until their documents are checked here. Approved people appear in search straight away.</div>
+          </div>
+          <div className="caps">Waiting ({pending.length})</div>
+          {pending.length ? (
+            <div className="group">
+              {pending.map((a) => (
+                <Item key={a.id} onClick={() => push({ type: "applicant", id: a.id })}>
+                  <RowBody lead={<Mono name={a.name} size={40} grey />} title={a.name} sub={a.level + " · " + a.submitted} chevron />
+                </Item>
+              ))}
+            </div>
+          ) : <div className="card empty">Queue is empty.</div>}
+          {decided.length ? (
+            <>
+              <div className="caps">Decided</div>
+              <div className="group">
+                {decided.map((a) => (
+                  <Item key={a.id} onClick={() => push({ type: "applicant", id: a.id })}>
+                    <RowBody lead={<Mono name={a.name} size={40} grey />} title={a.name} sub={a.level}
+                      right={st.approved.includes(a.id) ? <span className="pill green">Approved</span> : <span className="pill red">Rejected</span>} chevron />
+                  </Item>
+                ))}
+              </div>
+            </>
+          ) : null}
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+  function ApplicantPage({ id }) {
+    const a = SAMPLE_APPLICANTS.find((x) => x.id === id);
+    const checks = ui.checks[a.id] || { card: false, ec: false, eng: false };
+    const setChecks = (c) => setU({ checks: { ...ui.checks, [a.id]: c } });
+    const need = ["card", ...(a.docs.ecNo ? ["ec"] : []), ...(a.eng ? ["eng"] : [])];
+    const missingEc = !a.docs.ecNo;
+    const ready = !missingEc && need.every((k) => checks[k]);
+    const decided = st.approved.includes(a.id) ? "approved" : st.rejected.includes(a.id) ? "rejected" : null;
+    const Row = ({ k, title, sub, value }) => (
+      <div className="li vrow wrap" style={{ "--inset": "16px" }}>
+        <div className="tx"><div className="tt"><span>{title}</span></div><div className="st">{value || sub}</div></div>
+        {decided ? null : <Switch on={checks[k]} label={title + " checked"} onChange={(v) => setChecks({ ...checks, [k]: v })} />}
+      </div>
+    );
+    return (
+      <>
+        {NavBar({ title: "Check documents" })}
+        <div className="px">
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 6 }}><Mono name={a.name} size={72} grey /></div>
+          <div className="pname" style={{ fontSize: 24 }}>{a.name}</div>
+          <div className="plevel">{a.level} · {a.base} · applied {a.submitted.toLowerCase()}</div>
+          <div className="caps">Tick each one after you check it</div>
+          <div className="group">
+            {Row({ k: "card", title: "Ghana Card", value: a.docs.card + " · photo matches selfie?" })}
+            {a.docs.ecNo ? Row({ k: "ec", title: "Energy Commission · " + a.ec, value: a.docs.ecNo + " · found in EC register?" }) : (
+              <div className="li vrow" style={{ "--inset": "16px" }}>
+                <div className="tx"><div className="tt"><span>Energy Commission</span></div><div className="st" style={{ color: "var(--red)" }}>No certificate uploaded</div></div>
+                <span className="pill red">Missing</span>
+              </div>
+            )}
+            {a.eng ? Row({ k: "eng", title: "Engineering Council", value: a.docs.engNo + " · registration valid?" }) : null}
+          </div>
+          <div className="foot">Check certificates in the Energy Commission's register of certified electricians and the Engineering Council's register. Sample documents.</div>
+          <div style={{ height: 18 }} />
+          {decided ? (
+            <div className="card empty">{decided === "approved" ? a.name + " is approved and now shows in search." : a.name + " was rejected and told why."}</div>
+          ) : (
+            <div className="btnrow">
+              <Btn kind="danger" label="Reject" onClick={() => { commit((s) => ({ ...s, rejected: [...s.rejected, a.id] })); toast(firstName(a.name) + " rejected"); }} />
+              <Btn kind="green" label="Approve" disabled={!ready} onClick={() => commit((s) => ({ ...s, approved: [...s.approved, a.id] }), firstName(a.name) + " approved")} />
+            </div>
+          )}
+          {!decided && missingEc ? <div className="foot" style={{ textAlign: "center" }}>Electrical work needs an Energy Commission certificate, so this person can't be approved yet.</div> : null}
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+
+  /* ---------------- more ---------------- */
+  function More() {
+    const ACC = [
+      { id: "indigo", label: "Indigo", c: "#3F51D8" },
+      { id: "sea", label: "Sea blue", c: "#0A7CC1" },
+      { id: "teal", label: "Teal", c: "#0B7F74" },
+      { id: "violet", label: "Violet", c: "#7442C8" },
+    ];
+    return (
+      <>
+        <TitleBlock title="More" />
+        <div className="px">
+          <div className="group">
+            <Item onClick={() => { commit((s) => ({ ...s, mode: isPro ? "customer" : "pro" })); goTab("home"); toast(isPro ? "Customer view" : "You are " + me.name); }}>
+              <RowBody lead={<Sq Icon={Swap2} color="var(--tint-fill)" />} title={isPro ? "Switch to customer view" : "Switch to professional view"} sub={isPro ? "Find and request electricians" : "See the app as " + me.name} chevron />
+            </Item>
+            <Item onClick={() => push({ type: "admin" })}>
+              <RowBody lead={<Sq Icon={ShieldCheck} color="#34C759" />} title="Verification queue" sub="Admin: check documents" right={pendingApplicants ? <span className="pill red">{pendingApplicants}</span> : null} chevron />
+            </Item>
+          </div>
+          <div className="caps">Colour</div>
+          <div className="group">
+            <div className="swatches">
+              {ACC.map((a) => (
+                <div key={a.id} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <button className={"swatch" + ((st.accent || "indigo") === a.id ? " on" : "")} style={{ background: a.c }} onClick={() => commit((s) => ({ ...s, accent: a.id }))} aria-label={a.label}>
+                    {(st.accent || "indigo") === a.id ? <Check size={20} strokeWidth={2.8} /> : null}
+                  </button>
+                  <div className="swl">{a.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="foot">Try each colour across the app and pick the one for the brand.</div>
+          <div className="caps">About</div>
+          <div className="group">
+            <Item onClick={() => setSheet({ type: "welcome" })}>
+              <RowBody lead={<Sq Icon={InfoCircle} color="#8E8E93" />} title="About this demo" chevron />
+            </Item>
+            <Item onClick={() => setSheet({ type: "reset" })}>
+              <RowBody lead={<Sq Icon={Redo} color="#FF3B30" />} title="Reset the demo" sub="Clear requests, projects and approvals" chevron />
+            </Item>
+          </div>
+          <div className="foot">Demo build · all people, ratings and prices are sample data · nothing is sent anywhere.</div>
+        </div>
+        <Spacer />
+      </>
+    );
+  }
+
+  /* ---------------- shell ---------------- */
+  const customerTabs = [
+    { id: "home", Icon: TabHome, IconOn: TabHomeOn, label: "Home" },
+    { id: "find", Icon: TabFind, IconOn: TabFindOn, label: "Find" },
+    { id: "requests", Icon: TabReq, IconOn: TabReqOn, label: "Requests" },
+    { id: "more", Icon: TabMore, IconOn: TabMoreOn, label: "More" },
+  ];
+  const proTabs = [
+    { id: "home", Icon: TabHome, IconOn: TabHomeOn, label: "Today" },
+    { id: "jobs", Icon: TabJobs, IconOn: TabJobsOn, label: "Jobs", n: inboxOpen.length },
+    { id: "projects", Icon: TabDocs, IconOn: TabDocsOn, label: "Projects" },
+    { id: "profile", Icon: TabMe, IconOn: TabMeOn, label: "Profile" },
+    { id: "more", Icon: TabMore, IconOn: TabMoreOn, label: "More" },
+  ];
+  const tabs = isPro ? proTabs : customerTabs;
+  const activeTab = tabs.some((t) => t.id === tab) ? tab : "home";
+
+  let body;
+  if (page) {
+    body = {
+      results: () => ResultsPage({ query: page.query }),
+      pro: () => ProPage({ id: page.id, query: page.query, preview: page.preview || isPro }),
+      request: () => RequestPage({ id: page.id }),
+      project: () => ProjectPage({ id: page.id }),
+      admin: () => AdminPage(),
+      applicant: () => ApplicantPage({ id: page.id }),
+      inbox: () => InboxPage({ id: page.id }),
+      brief: () => BriefPage({ id: page.id }),
+    }[page.type]();
+  } else if (isPro) {
+    body = { home: ProToday, jobs: ProJobs, projects: ProProjects, profile: ProProfile, more: More }[activeTab]();
+  } else {
+    body = { home: Home, find: Find, requests: Requests, more: More }[activeTab]();
+  }
+
+  return (
+    <div className="vs-shell">
+      <div className="vs-scroll" ref={scrollRef} key={(isPro ? "p" : "c") + activeTab + stack.length}>
+        {body}
+      </div>
+      <div className="edgefade" />
+      <nav className={"tabbar glass" + (isPro ? " wide" : "")} aria-label="Sections">
+        {tabs.map(({ id, Icon, IconOn, label, n }) => {
+          const on = activeTab === id;
+          const I = on ? IconOn : Icon;
+          return (
+            <button key={id} className={"tab" + (on ? " on" : "")} aria-current={on ? "page" : undefined} onClick={() => goTab(id)}>
+              <I size={25} strokeWidth={on ? 2.1 : 1.7} />
+              {label}
+              {n ? <span className="dotn">{n}</span> : null}
+            </button>
+          );
+        })}
+      </nav>
+      {!isPro ? (
+        <button className="fab glass" onClick={() => setMenu(menu === "add" ? null : "add")} aria-label="New request">
+          <Plus size={26} strokeWidth={2.6} />
+        </button>
+      ) : null}
+
+      {menu === "add" && (
+        <PopMenu onClose={() => setMenu(null)} style={{ right: 12, bottom: "calc(max(env(safe-area-inset-bottom, 0px), 20px) + 66px)" }}
+          items={[{ label: "Fix something", Icon: Bolt, onClick: () => openFix(null) }, { label: "Start a project", Icon: HouseLine, onClick: openBuild }]} />
+      )}
+      {menu === "me" && (
+        <PopMenu onClose={() => setMenu(null)} style={{ right: 16, top: 76 }}
+          items={[
+            { label: isPro ? "Customer view" : "Professional view", Icon: Swap2, onClick: () => { commit((s) => ({ ...s, mode: isPro ? "customer" : "pro" })); goTab("home"); toast(isPro ? "Customer view" : "You are " + me.name); } },
+            { label: "Verification queue", Icon: ShieldCheck, onClick: () => push({ type: "admin" }) },
+          ]} />
+      )}
+
+      {sheet && sheet.type === "welcome" && <Welcome onClose={() => { setSheet(null); if (!st.seenWelcome) commit((s) => ({ ...s, seenWelcome: true })); }} />}
+      {sheet && sheet.type === "fix" && (
+        <FixSheet start={sheet} area={st.area} onArea={() => setAreaFor("sheet")} onClose={() => setSheet(null)}
+          onFind={(q) => {
+            setSheet(null);
+            if (sheet.proId) {
+              const p = proById(sheet.proId);
+              if (!p.cats.includes(q.cat)) { toast(firstName(p.name) + " doesn't do " + catOf(q.cat).label.toLowerCase()); setStack([...stack, { type: "results", query: q }]); return; }
+              setSheet({ type: "request", pro: p, query: q });
+              return;
+            }
+            setStack([...stack, { type: "results", query: q }]);
+          }} />
+      )}
+      {sheet && sheet.type === "build" && <BuildSheet area={st.area} onArea={() => setAreaFor("sheet")} onClose={() => setSheet(null)} onPost={postProject} />}
+      {sheet && sheet.type === "request" && <RequestSheet pro={sheet.pro} query={sheet.query} area={st.area} onClose={() => setSheet(null)} onSend={() => sendRequest(sheet.pro, sheet.query)} />}
+      {sheet && sheet.type === "review" && (
+        <ReviewSheet pro={proById(sheet.req.proId)} onClose={() => setSheet(null)}
+          onSave={(rv) => { const ok = commit((s) => ({ ...s, requests: s.requests.map((x) => (x.id === sheet.req.id ? { ...x, review: rv } : x)) }), "Review saved"); if (ok) setSheet(null); }} />
+      )}
+      {sheet && sheet.type === "quote" && (
+        <QuoteSheet brief={sheet.brief} onClose={() => setSheet(null)}
+          onSend={(q) => { const ok = commit((s) => ({ ...s, pro: { ...s.pro, quotes: { ...s.pro.quotes, [sheet.brief.id]: q } } }), "Quote sent · GH₵ " + money(q.amount)); if (ok) setSheet(null); }} />
+      )}
+      {sheet && sheet.type === "hire" && (
+        <Sheet title={"Choose " + firstName(proById(sheet.q.proId).name) + "?"} onClose={() => setSheet(null)}>
+          <div className="sgroup">
+            <KV k="Price" v={"GH₵ " + money(sheet.q.amount)} />
+            <KV k="Includes" v={sheet.q.materials ? "Labour + materials" : "Labour only"} />
+            <KV k="Time" v={sheet.q.days + " days"} />
+          </div>
+          <div className="note" style={{ marginTop: 14 }}>
+            <InfoCircle size={20} color="var(--tint)" />
+            <div>The other professionals are told politely that you chose someone else. You agree payment stages with {firstName(proById(sheet.q.proId).name)} directly.</div>
+          </div>
+          <div style={{ height: 18 }} />
+          <Btn label="Choose and share my number" onClick={() => {
+            const ok = commit((s) => ({ ...s, projects: s.projects.map((x) => (x.id === sheet.pj.id ? { ...x, status: "hired", hiredProId: sheet.q.proId } : x)) }), "You chose " + firstName(proById(sheet.q.proId).name));
+            if (ok) setSheet(null);
+          }} />
+        </Sheet>
+      )}
+      {sheet && sheet.type === "reset" && (
+        <Sheet title="Reset the demo?" onClose={() => setSheet(null)}>
+          <div style={{ fontSize: 16, color: "var(--sec)", lineHeight: 1.45, textAlign: "center", padding: "8px 6px 18px" }}>
+            Your sample requests, projects, quotes and approvals are cleared. Your colour choice is kept.
+          </div>
+          <Btn kind="danger" label="Reset" onClick={() => { const a = st.accent; commit(() => ({ ...blank(), seenWelcome: true, accent: a })); setSheet(null); goTab("home"); toast("Demo reset"); }} />
+        </Sheet>
+      )}
+      {areaFor && <AreaSheet value={st.area} onPick={setArea} onClose={() => setAreaFor(null)} />}
+
+      {toastMsg && <div className="toast" key={toastMsg.k} role="status">{toastMsg.m}</div>}
+      {done
+        ? ReactDOM.createPortal(
+            <div className="done" key={done.key} role="status" aria-live="polite">
+              <svg className="done-ic" viewBox="0 0 52 52" aria-hidden="true">
+                <circle className="done-c" cx="26" cy="26" r="24" />
+                <path className="done-k" d="M15.5 27.2l7 7L37 19.2" />
+              </svg>
+              <div className="done-t">{done.msg}</div>
+            </div>,
+            document.body
+          )
+        : null}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
